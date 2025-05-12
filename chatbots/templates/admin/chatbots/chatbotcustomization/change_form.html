@@ -1,0 +1,358 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        /* Chat Container */
+        .chat-container {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        /* Chat Icon Button */
+        .chat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #4a6cf7;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .chat-icon:hover {
+            transform: scale(1.05);
+            background-color: #3a5ce5;
+        }
+
+        /* Chat Window */
+            .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 450px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background-color: #4a6cf7;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Chat Messages */
+            .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: #4a6cf7;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: #f1f1f1;
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Chat Input */
+            .chat-input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .send-btn {
+            background: none;
+            border: none;
+            color: #4a6cf7;
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive Design */
+            @media (max-width: 480px) {
+                .chat-window {
+                    width: 300px;
+                    height: 400px;
+                    right: 0;
+                }
+        }
+    </style>
+{% endblock %}
+
+{% block after_related_objects %}
+    <div class="chat-container">
+        <!-- Chat Icon Button -->
+        <button class="chat-icon" id="chatIcon" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+        </button>
+
+        <!-- Chat Window -->
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header" id="chatHeader">
+                <h3 id="headerText">Chat Support</h3>
+                <button class="close-btn" id="closeChat" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    <div class="message-content">Hello! How can I help you today?</div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="userInput" placeholder="Type your message..." class="chat-input">
+                <button id="sendMessage" class="send-btn" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
+                        <path d="m22 2-7 20-4-9-9-4Z"></path>
+                        <path d="M22 2 11 13"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // DOM Elements
+            const chatIcon = document.getElementById("chatIcon")
+            const chatWindow = document.getElementById("chatWindow")
+            const closeChat = document.getElementById("closeChat")
+            const userInput = document.getElementById("userInput")
+            const sendMessage = document.getElementById("sendMessage")
+            const chatMessages = document.getElementById("chatMessages")
+
+            // Chat elements
+            const chatHeader = document.getElementById("chatHeader");
+            const headerText = document.getElementById("headerText");
+            const msgBox = document.getElementById("chatMessages");
+
+            // Form elements
+            const headerBGColor = document.getElementById("id_header_bg_color");
+            const headerTextColor = document.getElementById("id_header_text_color");
+            const msgBoxBGColor = document.getElementById("id_msg_box_bg_color");
+            const sendBtnColor = document.getElementById("id_btn_color");
+            const userMsgBGColor = document.getElementById("id_user_message_bg_color");
+            const userMsgTextColor = document.getElementById("id_user_message_text_color");
+            const botMsgBGColor = document.getElementById("id_bot_message_bg_color");
+            const botMsgTextColor = document.getElementById("id_bot_message_text_color");
+
+            // Set default colors
+            chatHeader.style.backgroundColor = headerBGColor.value;
+            headerText.style.color = headerTextColor.value;
+            msgBox.style.backgroundColor = msgBoxBGColor.value;
+            sendMessage.style.color = sendBtnColor.value;
+            const userMsgs = document.getElementsByClassName("user-message");
+            for (let i = 0; i < userMsgs.length; i++) {
+                userMsgs[i].style.backgroundColor = userMsgBGColor.value;
+                userMsgs[i].style.color = userMsgTextColor.value;
+            };
+            const botMsgs = document.getElementsByClassName("bot-message");
+            for (let i = 0; i < botMsgs.length; i++) {
+                botMsgs[i].style.backgroundColor = botMsgBGColor.value;
+                botMsgs[i].style.color = botMsgTextColor.value;
+            };
+
+            // Handle chat header bg color change
+            headerBGColor.addEventListener("input", (e) => {
+                chatHeader.style.backgroundColor = e.target.value;
+            });
+
+            // Handle chat header text color change
+            headerTextColor.addEventListener("input", (e) => {
+                headerText.style.color = e.target.value;
+            });
+
+            // Handle msg box bg color change
+            msgBoxBGColor.addEventListener("input", (e) => {
+                msgBox.style.backgroundColor = e.target.value;
+            });
+
+            // Handle send msg btn color change
+            sendBtnColor.addEventListener("input", (e) => {
+                sendMessage.style.color = e.target.value;
+            });
+
+            // Handle user msg bg color change
+            userMsgBGColor.addEventListener("input", (e) => {
+                const userMsgs = document.getElementsByClassName("user-message");
+                for (let i = 0; i < userMsgs.length; i++) {
+                    userMsgs[i].style.backgroundColor = e.target.value;
+                }
+            });
+
+            // Handle user msg text color change
+            userMsgTextColor.addEventListener("input", (e) => {
+                const userMsgs = document.getElementsByClassName("user-message");
+                for (let i = 0; i < userMsgs.length; i++) {
+                    userMsgs[i].style.color = e.target.value;
+                }
+            });
+
+            // Handle bot msg bg color change
+            botMsgBGColor.addEventListener("input", (e) => {
+                const botMsgs = document.getElementsByClassName("bot-message");
+                for (let i = 0; i < botMsgs.length; i++) {
+                    botMsgs[i].style.backgroundColor = e.target.value;
+                }
+            });
+
+            // Handle bot msg text color change
+            botMsgTextColor.addEventListener("input", (e) => {
+                const botMsgs = document.getElementsByClassName("bot-message");
+                for (let i = 0; i < botMsgs.length; i++) {
+                    botMsgs[i].style.color = e.target.value;
+                }
+            });
+
+            // Toggle chat window visibility
+            chatIcon.addEventListener("click", () => {
+                chatWindow.style.display = "flex"
+                chatIcon.style.display = "none"
+            })
+
+            closeChat.addEventListener("click", () => {
+                chatWindow.style.display = "none"
+                chatIcon.style.display = "flex"
+            })
+
+            // Function to add a message to the chat
+            function addMessage(message, isUser = false) {
+                const messageDiv = document.createElement("div")
+                messageDiv.classList.add("message")
+                messageDiv.classList.add(isUser ? "user-message" : "bot-message")
+
+                const messageContent = document.createElement("div")
+                messageContent.classList.add("message-content")
+                messageContent.textContent = message
+
+                messageDiv.appendChild(messageContent)
+                chatMessages.appendChild(messageDiv)
+
+                // Scroll to the bottom of the chat
+                chatMessages.scrollTop = chatMessages.scrollHeight
+            }
+
+            // Function to get bot response (simple implementation)
+            function getBotResponse(userMessage) {
+                // Simple responses based on user input
+                const userMessageLower = userMessage.toLowerCase()
+
+                if (userMessageLower.includes("hello") || userMessageLower.includes("hi")) {
+                return "Hello there! How can I help you today?"
+                } else if (userMessageLower.includes("help")) {
+                return "I'm here to help! What do you need assistance with?"
+                } else if (userMessageLower.includes("bye") || userMessageLower.includes("goodbye")) {
+                return "Goodbye! Feel free to come back if you have more questions."
+                } else if (userMessageLower.includes("thank")) {
+                return "You're welcome! Is there anything else I can help with?"
+                } else {
+                return "I'm not sure I understand. Could you please rephrase your question?"
+                }
+            }
+
+            // Send message when button is clicked
+            sendMessage.addEventListener("click", () => {
+                sendUserMessage()
+            })
+
+            // Send message when Enter key is pressed
+            userInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    sendUserMessage()
+                }
+            })
+
+            // Function to handle sending user message
+            function sendUserMessage() {
+                const message = userInput.value.trim()
+
+                if (message !== "") {
+                // Add user message to chat
+                addMessage(message, true)
+
+                // Clear input field
+                userInput.value = ""
+
+                // Simulate bot thinking with a slight delay
+                setTimeout(() => {
+                    const botResponse = getBotResponse(message)
+                    addMessage(botResponse)
+                }, 500)
+                }
+            }
+        })
+    </script>
+{% endblock %}
