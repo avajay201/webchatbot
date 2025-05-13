@@ -23,6 +23,7 @@ urlpatterns = [
     path('dashboard/', admin.site.urls),
     path('api/auth/', include('accounts.urls')),
     path('api/chat-bot/', include('chatbots.urls')),
+    path('payment/', include('subscriptions.urls')),
 ]
 
 if settings.DEBUG:

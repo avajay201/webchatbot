@@ -2,6 +2,7 @@ from django import forms
 from .models import Chatbot, ChatbotCustomization
 from subscriptions.models import UserSubscription
 from django.utils.timezone import now
+from .utils import is_reachable_url
 
 
 class ChatbotForm(forms.ModelForm):
@@ -23,21 +24,32 @@ class ChatbotForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        data_fields = list(cleaned_data.keys())
 
         if not self.request or self.request.user.is_superuser:
             return cleaned_data
-        
+
         self.instance.user = self.request.user
 
-        if self.instance.pk is None:
+        if self.instance.pk is None and 'subscription' in data_fields:
             user = self.request.user
             subscription =  cleaned_data['subscription']
             user_chat_bots = Chatbot.objects.filter(user=user, subscription=subscription).count()
-            
-            if user_chat_bots >= subscription.plan.max_chatbots:
+
+            if user_chat_bots >= subscription.subscription.max_chatbots:
                 raise forms.ValidationError(
-                    f"You have reached the maximum number of chatbots allowed with the selected subscription ({subscription.plan.max_chatbots})."
+                    f"You have reached the maximum number of chatbots allowed with the selected subscription ({subscription.subscription.max_chatbots})."
                 )
+
+        if 'website_url' in data_fields:
+            web_url = cleaned_data['website_url']
+            is_reachable = is_reachable_url(web_url)
+            if not is_reachable:
+                raise forms.ValidationError(
+                    f"This website URL is unreachable."
+                )
+
+        self.instance.status = 'in_progress'
         return cleaned_data
 
 class ChatbotCustomizationForm(forms.ModelForm):

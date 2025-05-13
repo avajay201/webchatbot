@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-dsplaksi$mptg$%6ufuh44i+lj=-d^7vm1g^^2md^##9qy#!v+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'accounts',
     'subscriptions',
     'chatbots',
-    'dashboard',
     'core',
 ]
 
@@ -192,3 +191,12 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Razorpay configs
+RAZORPAY_KEY_ID = 'rzp_test_CdMtTWPBOCMLTH'
+RAZORPAY_SECRET_ID = 'mLltOTxfAcB7AdJhYYAzYqSt'
+
+BASE_URL = 'https://8d87-122-160-116-29.ngrok-free.app'
+
+# Celery setup
+CELERY_BROKER_URL = 'redis://localhost:6379/0'

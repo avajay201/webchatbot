@@ -6,13 +6,24 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Chatbot(models.Model):
+    STATUS_CHOICES = [
+        ('in_progress', 'In Progress'),
+        ('success', 'Success'),
+        ('failed', 'Failed'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
     subscription = models.ForeignKey(UserSubscription, on_delete=models.CASCADE)
-    website_url = models.URLField(unique=True)
-    api_key = models.CharField(max_length=150, unique=True)
-    sdk = models.CharField(max_length=150, unique=True)
+    website_url = models.URLField(unique=True, help_text="Example: https://yourdomain.com — Enter the exact website URL.")
+    api_key = models.CharField(max_length=150)
+    sdk = models.CharField(max_length=150)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
