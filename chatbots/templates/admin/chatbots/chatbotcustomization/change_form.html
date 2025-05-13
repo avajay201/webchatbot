@@ -88,29 +88,6 @@
             gap: 10px;
         }
 
-        /* Scrollbar styles for #chatMessages */
-        #chatMessages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #chatMessages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        #chatMessages::-webkit-scrollbar-thumb {
-            background-color: #3490dc;
-            border-radius: 4px;
-        }
-
-        #chatMessages::-webkit-scrollbar-thumb:hover {
-            background-color: #2779bd;
-        }
-
-        #chatMessages {
-            scrollbar-width: thin;
-            scrollbar-color: #3490dc #f1f1f1;
-        }
-
         .message {
             max-width: 80%;
             padding: 10px 15px;
@@ -253,22 +230,32 @@
             const inputPlaceholderColor = document.getElementById("id_input_placeholder_color");
 
             function setScrollbarWidth(width) {
+                // Remove previous custom scrollbar style if it exists
+                //const existingStyle = document.getElementById('custom-scrollbar-style');
+                //if (existingStyle) {
+                //    existingStyle.remove();
+                //}
+            
+                // Create new style element
                 const style = document.createElement('style');
+                style.id = 'custom-scrollbar-style'; // Set ID for future reference
+            
                 style.textContent = `
-                  #chatMessages::-webkit-scrollbar {
-                    width: ${width}px;
-                  }
-              
-                  #chatMessages::-webkit-scrollbar-thumb {
-                    background-color: #888;
-                    border-radius: 4px;
-                  }
-              
-                  #chatMessages {
-                    scrollbar-width: thin;
-                    scrollbar-color: #888 #f1f1f1;
-                  }
+                    #chatMessages::-webkit-scrollbar {
+                        width: ${width}px;
+                    }
+            
+                    #chatMessages::-webkit-scrollbar-thumb {
+                        background-color: #888;
+                        border-radius: 4px;
+                    }
+            
+                    #chatMessages {
+                        scrollbar-width: ${width <= 8 ? 'thin' : 'auto'};
+                        scrollbar-color: #888 #f1f1f1;
+                    }
                 `;
+            
                 document.head.appendChild(style);
             }
 
@@ -281,6 +268,19 @@
                 `;
                 document.head.appendChild(style);
             }
+
+            const msgStyleApply = ()=>{
+                const userMsgs = document.getElementsByClassName("user-message");
+                for (let i = 0; i < userMsgs.length; i++) {
+                    userMsgs[i].style.backgroundColor = userMsgBGColor.value;
+                    userMsgs[i].style.color = userMsgTextColor.value;
+                };
+                const botMsgs = document.getElementsByClassName("bot-message");
+                for (let i = 0; i < botMsgs.length; i++) {
+                    botMsgs[i].style.backgroundColor = botMsgBGColor.value;
+                    botMsgs[i].style.color = botMsgTextColor.value;
+                };
+            };
 
             // Set default ui
             chatContainer.style.fontFamily = fontFamily.value;
@@ -295,16 +295,7 @@
             headerText.style.color = headerTextColor.value;
             msgBox.style.backgroundColor = msgBoxBGColor.value;
             sendMessage.style.color = sendBtnColor.value;
-            const userMsgs = document.getElementsByClassName("user-message");
-            for (let i = 0; i < userMsgs.length; i++) {
-                userMsgs[i].style.backgroundColor = userMsgBGColor.value;
-                userMsgs[i].style.color = userMsgTextColor.value;
-            };
-            const botMsgs = document.getElementsByClassName("bot-message");
-            for (let i = 0; i < botMsgs.length; i++) {
-                botMsgs[i].style.backgroundColor = botMsgBGColor.value;
-                botMsgs[i].style.color = botMsgTextColor.value;
-            };
+            msgStyleApply();
             inputContainer.style.backgroundColor = inputContainerBGColor.value;
             msgInput.style.color = inputColor.value;
             msgInput.style.borderColor = inputBorderColor.value;
@@ -448,6 +439,7 @@
 
                 // Scroll to the bottom of the chat
                 chatMessages.scrollTop = chatMessages.scrollHeight
+                msgStyleApply();
             }
 
             // Function to get bot response (simple implementation)
