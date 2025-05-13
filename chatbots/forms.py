@@ -1,5 +1,5 @@
 from django import forms
-from .models import Chatbot
+from .models import Chatbot, ChatbotCustomization
 from subscriptions.models import UserSubscription
 from django.utils.timezone import now
 
@@ -38,5 +38,51 @@ class ChatbotForm(forms.ModelForm):
                 raise forms.ValidationError(
                     f"You have reached the maximum number of chatbots allowed with the selected subscription ({subscription.plan.max_chatbots})."
                 )
-        print("Cleaned data:", cleaned_data)
         return cleaned_data
+
+class ChatbotCustomizationForm(forms.ModelForm):
+    class Meta:
+        model = ChatbotCustomization
+        fields = '__all__'
+
+        color_fields = [
+            'chat_icon_bg_color',
+            'chat_icon_color',
+            'chat_close_btn_color',
+            'header_bg_color',
+            'header_text_color',
+            'msg_box_bg_color',
+            'scrollbar_color',
+            'send_btn_color',
+            'user_message_bg_color',
+            'user_message_text_color',
+            'bot_message_bg_color',
+            'bot_message_text_color',
+            'input_container_bg_color',
+            'input_color',
+            'input_border_color',
+            'input_placeholder_color',
+        ]
+
+        number_fields = {
+            'border_radius': forms.NumberInput(attrs={
+                'min': 0,
+                'max': 25,
+                'step': 1,
+                'class': 'border border-base-200 bg-white font-medium min-w-20 placeholder-base-400 rounded-default shadow-xs text-font-default-light text-sm focus:outline-2 focus:-outline-offset-2 focus:outline-primary-600 group-[.errors]:border-red-600 focus:group-[.errors]:outline-red-600 dark:bg-base-900 dark:border-base-700 dark:text-font-default-dark dark:group-[.errors]:border-red-500 dark:focus:group-[.errors]:outline-red-500 dark:scheme-dark group-[.primary]:border-transparent px-3 py-2 w-full max-w-2xl'
+            }),
+            'scrollbar_width': forms.NumberInput(attrs={
+                'min': 4,
+                'max': 12,
+                'step': 1,
+                'class': 'border border-base-200 bg-white font-medium min-w-20 placeholder-base-400 rounded-default shadow-xs text-font-default-light text-sm focus:outline-2 focus:-outline-offset-2 focus:outline-primary-600 group-[.errors]:border-red-600 focus:group-[.errors]:outline-red-600 dark:bg-base-900 dark:border-base-700 dark:text-font-default-dark dark:group-[.errors]:border-red-500 dark:focus:group-[.errors]:outline-red-500 dark:scheme-dark group-[.primary]:border-transparent px-3 py-2 w-full max-w-2xl'
+            }),
+        }
+
+        widgets = {
+            **{
+                field: forms.TextInput(attrs={'type': 'color'})
+                for field in color_fields
+            },
+            **number_fields
+        }

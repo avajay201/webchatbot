@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Django
+*.log
+*.pot
+*.pyc
+media/
+staticfiles/
+local_settings.py
+.env
+.env.*
+
+**/migrations/*.pyc
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Virtualenv
+venv/
+myenv/
+env/
+ENV/
+.venv/
+pip-selfcheck.json
+
+# Coverage & testing
+htmlcov/
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Celery beat schedule
+celerybeat-schedule

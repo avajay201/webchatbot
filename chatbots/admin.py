@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Chatbot, ChatbotCustomization
 from unfold.admin import ModelAdmin
-from .forms import ChatbotForm
+from .forms import ChatbotForm, ChatbotCustomizationForm
 
 
 @admin.register(Chatbot)
@@ -36,6 +36,7 @@ class ChatbotAdmin(ModelAdmin):
 
 @admin.register(ChatbotCustomization)
 class ChatbotCustomizationAdmin(ModelAdmin):
+    form = ChatbotCustomizationForm
     change_form_template = "admin/chatbots/chatbotcustomization/change_form.html"
 
     def get_fields(self, request, obj=None):
