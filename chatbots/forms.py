@@ -81,7 +81,7 @@ class ChatbotCustomizationForm(forms.ModelForm):
 
         widgets = {
             **{
-                field: forms.TextInput(attrs={'type': 'color'})
+                field: forms.TextInput(attrs={'type': 'color', 'style': 'width: 70px; height: 35px;'})
                 for field in color_fields
             },
             **number_fields
