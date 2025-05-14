@@ -88,7 +88,7 @@ class SubscriptionAdmin(ModelAdmin):
             return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
         else:
             user_subscription = UserSubscription.objects.filter(user=request.user, subscription=subscription).first()
-            if user_subscription.end_date >= timezone.now():
+            if user_subscription and user_subscription.end_date >= timezone.now():
                 messages.info(request, _("You already have an active subscription to this plan."))
                 return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
 
