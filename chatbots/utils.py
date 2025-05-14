@@ -18,6 +18,7 @@ def is_reachable_url(web_url):
 @shared_task
 def process_chatbot(chatbot_id):
     """Start a new task to create a new chat bot"""
+    print('***Running process_chatbot***')
     try:
         chatbot = Chatbot.objects.get(id=chatbot_id)
 

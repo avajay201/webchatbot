@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'colorfield',
+    'django_celery_beat',
     'accounts',
     'subscriptions',
     'chatbots',
@@ -200,3 +201,7 @@ BASE_URL = 'https://8d87-122-160-116-29.ngrok-free.app'
 
 # Celery setup
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_ENABLE_UTC = True
+CELERY_TIMEZONE = 'UTC'

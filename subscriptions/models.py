@@ -20,10 +20,9 @@ class UserSubscription(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
     is_active = models.BooleanField(default=True)
-    trial_used = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.username} - {self.subscription.name}"
+        return self.subscription.name
 
 class PaymentTransaction(models.Model):
     user_subscription = models.ForeignKey(UserSubscription, on_delete=models.SET_NULL, null=True)
@@ -36,4 +35,4 @@ class PaymentTransaction(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user_subscription.user.username} - {self.user_subscription.subscription.name}"
+        return self.user_subscription.subscription.name

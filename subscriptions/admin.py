@@ -9,6 +9,21 @@ from django.urls import path
 import razorpay
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
+from django_celery_beat.models import (
+    ClockedSchedule,
+    CrontabSchedule,
+    IntervalSchedule,
+    PeriodicTask,
+    SolarSchedule,
+)
+from django_celery_beat.admin import ClockedScheduleAdmin as BaseClockedScheduleAdmin
+from django_celery_beat.admin import CrontabScheduleAdmin as BaseCrontabScheduleAdmin
+from django_celery_beat.admin import PeriodicTaskAdmin as BasePeriodicTaskAdmin
+from django_celery_beat.admin import PeriodicTaskForm, TaskSelectWidget
+from unfold.widgets import UnfoldAdminSelectWidget, UnfoldAdminTextInputWidget
 
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_ID))
@@ -57,11 +72,31 @@ class SubscriptionAdmin(ModelAdmin):
 
     def purchase_subscription(self, request, subscription_id):
         subscription = get_object_or_404(Subscription, pk=subscription_id)
+        if subscription.is_free_trial and not subscription.price:
+            user_subscription = UserSubscription.objects.filter(user=request.user, subscription=subscription).first()
+            if user_subscription:
+                messages.info(request, _("Looks like you've already purchased this subscription."))
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
+
+            end_date = datetime.now() + relativedelta(days=subscription.days)
+            UserSubscription.objects.create(
+                user=request.user,
+                subscription=subscription,
+                end_date = end_date
+            )
+            messages.success(request, _("Subscription purchased successfully."))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
+        else:
+            user_subscription = UserSubscription.objects.filter(user=request.user, subscription=subscription).first()
+            if user_subscription.end_date >= timezone.now():
+                messages.info(request, _("You already have an active subscription to this plan."))
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
+
         payment_url = self.get_payment_url(request.user, subscription)
         print('Subscription purchase payment URL:', payment_url)
         if not payment_url:
             messages.error(request, _("Failed to purchase this subscription."))
-            return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/admin/"))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
         return redirect(payment_url)
 
 @admin.register(UserSubscription)
@@ -74,4 +109,40 @@ class UserSubscriptionAdmin(ModelAdmin):
 
 @admin.register(PaymentTransaction)
 class PaymentTransactionAdmin(ModelAdmin):
+    pass
+
+
+admin.site.unregister(PeriodicTask)
+admin.site.unregister(IntervalSchedule)
+admin.site.unregister(CrontabSchedule)
+admin.site.unregister(SolarSchedule)
+admin.site.unregister(ClockedSchedule)
+
+class UnfoldTaskSelectWidget(UnfoldAdminSelectWidget, TaskSelectWidget):
+    pass
+
+class UnfoldPeriodicTaskForm(PeriodicTaskForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["task"].widget = UnfoldAdminTextInputWidget()
+        self.fields["regtask"].widget = UnfoldTaskSelectWidget()
+
+@admin.register(PeriodicTask)
+class PeriodicTaskAdmin(BasePeriodicTaskAdmin, ModelAdmin):
+    form = UnfoldPeriodicTaskForm
+
+@admin.register(IntervalSchedule)
+class IntervalScheduleAdmin(ModelAdmin):
+    pass
+
+@admin.register(CrontabSchedule)
+class CrontabScheduleAdmin(BaseCrontabScheduleAdmin, ModelAdmin):
+    pass
+
+@admin.register(SolarSchedule)
+class SolarScheduleAdmin(ModelAdmin):
+    pass
+
+@admin.register(ClockedSchedule)
+class ClockedScheduleAdmin(BaseClockedScheduleAdmin, ModelAdmin):
     pass
