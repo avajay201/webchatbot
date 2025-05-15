@@ -30,6 +30,20 @@ llm = ChatGoogleGenerativeAI(
     streaming=True)
 embedding = HuggingFaceEmbeddings(model_name=settings.EMBEDINGS_MODEL_NAME)
 
+# Prompt initialize
+template = """Answer the question using only the context below.
+If the context does not contain the answer, just respond with "Unfortunately, I'm not able to answer your query.". Do not explain or expand.
+
+Context:
+{context}
+
+Question: {question}
+"""
+prompt = PromptTemplate(
+    input_variables=["context", "question"],
+    template=template,
+)
+
 def is_reachable_url(web_url):
     """Check given web url is reachable/valid or not"""
     try:
@@ -55,13 +69,14 @@ def process_chatbot(chatbot_id):
                 if not Chatbot.objects.filter(api_key=api_key).exists():
                     break
 
-            sdk = f"""<script src="{settings.BASE_URL}"
+            sdk = f"""<script src="{settings.BASE_URL}/static/js/chatbot.js"
                         data-api-key="{api_key}"></script>"""
 
             chatbot.api_key = api_key
             chatbot.sdk = sdk
             chatbot.status = 'success'
-            
+            chatbot.is_active = True
+
             ChatbotCustomization.objects.create(chatbot=chatbot)
         else:
             chatbot.status = 'failed'
@@ -223,6 +238,17 @@ def generate_api_key(prefix="cbt_sk_prod", length=24):
     alphabet = string.ascii_letters + string.digits
     key = ''.join(secrets.choice(alphabet) for _ in range(length))
     return f"{prefix}_{key}"
+
+def bot_answer(name, question):
+    vectors = load_vectors(name)
+    chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=vectors.as_retriever(),
+        chain_type_kwargs={"prompt": prompt, "document_variable_name": "context"},
+        return_source_documents=False
+    )
+    for chunk in chain.stream(question):
+        yield chunk
 
 if __name__ == '__main__':
     pass

@@ -282,12 +282,42 @@
                 };
             };
 
+            function setScrollbarStyles(width, color) {
+                // Remove previous custom scrollbar style if it exists
+                const existingStyle = document.getElementById('custom-scrollbar-style');
+                if (existingStyle) {
+                    existingStyle.remove();
+                }
+            
+                // Create new style element
+                const style = document.createElement('style');
+                style.id = 'custom-scrollbar-style';
+            
+                style.textContent = `
+                    #chatMessages::-webkit-scrollbar {
+                        width: ${width}px;
+                    }
+            
+                    #chatMessages::-webkit-scrollbar-thumb {
+                        background-color: ${color};
+                        border-radius: 4px;
+                    }
+            
+                    #chatMessages {
+                        scrollbar-width: ${width <= 8 ? 'thin' : 'auto'};
+                        scrollbar-color: ${color} #f1f1f1;
+                    }
+                `;
+            
+                document.head.appendChild(style);
+            }
+
             // Set default ui
             chatContainer.style.fontFamily = fontFamily.value;
             chatWindow.style.borderRadius = borderRadius.value + "px";
             welcomeMessageEle.textContent = welcomeMessage.value;
             msgInput.setAttribute('placeholder', inputPlacegholderText.value);
-            setScrollbarWidth(scrollbarWidth.value);
+            setScrollbarStyles(scrollbarWidth.value, scrollbarColor.value);
             chatIcon.style.backgroundColor = chatIconBGColor.value;
             chatIcon.style.color = chatIconColor.value;
             closeChat.style.color = chatCloseIconColor.value;
@@ -323,7 +353,12 @@
 
             // Handle scrollbar width change
             scrollbarWidth.addEventListener("input", (e) => {
-                setScrollbarWidth(e.target.value);
+                setScrollbarStyles(e.target.value, scrollbarColor.value);
+            });
+
+            // Handle scrollbar color change
+            scrollbarColor.addEventListener("input", (e) => {
+                setScrollbarStyles(scrollbarWidth.value, e.target.value);
             });
 
             // Handle chat icon bg color change

@@ -67,7 +67,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "http://localhost:5500"
 ]
 
 ROOT_URLCONF = 'webChatBot.urls'
@@ -135,7 +136,7 @@ SIMPLE_JWT = {
 TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
-    "http://127.0.0.1:8000",
+    "http://localhost:5500"
 ]
 
 # Internationalization
@@ -198,7 +199,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 RAZORPAY_KEY_ID = 'rzp_test_CdMtTWPBOCMLTH'
 RAZORPAY_SECRET_ID = 'mLltOTxfAcB7AdJhYYAzYqSt'
 
-BASE_URL = 'http://127.0.0.1:8000'
+BASE_URL = 'http://localhost:8000'
 
 # Celery setup
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
