@@ -8,7 +8,7 @@ from .forms import ChatbotForm, ChatbotCustomizationForm
 class ChatbotAdmin(ModelAdmin):
     readonly_fields = ('api_key', 'sdk', 'status', 'created_at', 'updated_at')
     form = ChatbotForm
-    
+
     def get_form(self, request, obj=None, **kwargs):
         Form = super().get_form(request, obj, **kwargs)
         class RequestForm(Form):
@@ -30,9 +30,12 @@ class ChatbotAdmin(ModelAdmin):
         return fields
 
     def get_readonly_fields(self, request, obj=None):
+        updated_readonly_fields = self.readonly_fields
         if obj:
-            return ('website_url',) + self.readonly_fields
-        return self.readonly_fields
+            updated_readonly_fields = ('website_url', 'subscription') + updated_readonly_fields
+        else:
+            updated_readonly_fields = ('is_active',) + updated_readonly_fields
+        return updated_readonly_fields
 
 @admin.register(ChatbotCustomization)
 class ChatbotCustomizationAdmin(ModelAdmin):

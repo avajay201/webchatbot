@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from django.templatetags.static import static
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -197,7 +198,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 RAZORPAY_KEY_ID = 'rzp_test_CdMtTWPBOCMLTH'
 RAZORPAY_SECRET_ID = 'mLltOTxfAcB7AdJhYYAzYqSt'
 
-BASE_URL = 'https://8d87-122-160-116-29.ngrok-free.app'
+BASE_URL = 'http://127.0.0.1:8000'
 
 # Celery setup
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -205,3 +206,14 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ENABLE_UTC = True
 CELERY_TIMEZONE = 'UTC'
+
+# dirs
+CHROMA_STORE_DIR = 'chroma_store'
+TEMP_DIR = 'temps'
+os.makedirs(CHROMA_STORE_DIR, exist_ok=True)
+os.makedirs(TEMP_DIR, exist_ok=True)
+
+# API keys and models
+GEMINI_API_KEY = 'AIzaSyCxQOEEj1YWE7SaP1tMG3Ug_jwqYPIJpZI'
+GEMINI_MODEL_NAME = 'gemini-2.0-flash'
+EMBEDINGS_MODEL_NAME = 'all-MiniLM-L6-v2'

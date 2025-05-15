@@ -13,14 +13,15 @@ class ChatbotForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
-        if self.request and not self.request.user.is_superuser:
-            self.fields['subscription'].queryset = UserSubscription.objects.filter(
-                user=self.request.user,
-                is_active=True,
-                end_date__gte=now()
-            )
-        elif 'subscription' in self.fields:
-            self.fields['subscription'].queryset = UserSubscription.objects.all()
+        if 'subscription' in list(self.fields.keys()):
+            if self.request and not self.request.user.is_superuser:
+                self.fields['subscription'].queryset = UserSubscription.objects.filter(
+                    user=self.request.user,
+                    is_active=True,
+                    end_date__gte=now()
+                )
+            elif 'subscription' in self.fields:
+                self.fields['subscription'].queryset = UserSubscription.objects.all()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -34,7 +35,7 @@ class ChatbotForm(forms.ModelForm):
         if self.instance.pk is None and 'subscription' in data_fields:
             user = self.request.user
             subscription =  cleaned_data['subscription']
-            user_chat_bots = Chatbot.objects.filter(user=user, subscription=subscription).count()
+            user_chat_bots = Chatbot.objects.filter(user=user, subscription=subscription, status='success').count()
 
             if user_chat_bots >= subscription.subscription.max_chatbots:
                 raise forms.ValidationError(
