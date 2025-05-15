@@ -109,7 +109,7 @@ class UserSubscriptionAdmin(ModelAdmin):
 
 @admin.register(PaymentTransaction)
 class PaymentTransactionAdmin(ModelAdmin):
-    pass
+    readonly_fields = ('created_at', )
 
 
 admin.site.unregister(PeriodicTask)
