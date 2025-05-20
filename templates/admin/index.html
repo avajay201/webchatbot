@@ -5,34 +5,280 @@
 {% block breadcrumbs %}{% endblock %}
 
 {% block title %}
-    {% if subtitle %}
-        {{ subtitle }} |
-    {% endif %}
+{% if subtitle %}
+{{ subtitle }} |
+{% endif %}
 
-    {{ title }} | {{ site_title|default:_('Django site admin') }}
+{{ title }} | {{ site_title|default:_('Django site admin') }}
 {% endblock %}
 
 {% block branding %}
-    {% include "unfold/helpers/site_branding.html" %}
+{% include "unfold/helpers/site_branding.html" %}
 {% endblock %}
 
 {% block content %}
-<div style="background-color: rgb(51 56 66 / 12%); border-radius: 8px;" class="custom-dashboard w-full mt-10">
-    <div class="bg-indigo-600 dark:bg-indigo-800 text-white rounded-2xl shadow-lg p-4 mb-6 flex items-center justify-start w-full">
-        <div class="tab active shadow-lg cursor-pointer text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition">
-            Overview
+<div class="mx-auto custom-dashboard">
+    <div class="flex flex-col gap-8 mb-12">
+        <div class="flex flex-col gap-4 sm:flex-row">
+            <nav class="bg-base-100 flex gap-2 p-1 rounded-default text-sm dark:bg-white/[.04]">
+                <a href="#"
+                    class="tab flex flex-row font-medium items-center px-2.5 py-1 rounded-default  bg-white shadow-xs text-font-important-light hover:bg-white dark:bg-base-900 dark:hover:bg-base-900 dark:text-font-important-dark">
+                    Overview
+                </a>
+                <a href="#"
+                    class="tab flex flex-row font-medium items-center px-2.5 py-1 rounded-default text-font-subtle-light dark:text-font-subtle-dark hover:bg-base-700/[.04]  dark:hover:bg-white/[.04]">
+                    Chatbots
+                </a>
+                <a href="#"
+                    class="tab flex flex-row font-medium items-center px-2.5 py-1 rounded-default text-font-subtle-light dark:text-font-subtle-dark hover:bg-base-700/[.04]  dark:hover:bg-white/[.04]">
+                    Subscriptions
+                </a>
+            </nav>
         </div>
-        <div class="tab cursor-pointer text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition">
-            Chatbots
+        <div class="flex flex-col gap-8 lg:flex-row">
+            <div
+                class="card bg-white block border border-base-200 flex flex-col grow overflow-hidden p-6 relative rounded-default shadow-xs dark:bg-base-900 dark:border-base-800  lg:w-1/3">
+                <span class="grow relative ">
+                    <p class="leading-relaxed mb-0 text-sm">
+                        Active chatbots
+                    </p>
+                    <div
+                        class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
+                        3
+                    </div>
+                    <div class="absolute right-0 top-0">
+                        <span
+                            class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
+                            Last 3 month
+                        </span>
+                    </div>
+                </span>
+                <div
+                    class="border-t border-base-200 flex items-center justify-center -mb-6 -mx-6 mt-50 mt-6 pb-2 pt-2 px-6 text-sm dark:border-base-800">
+                    <div class="flex items-center gap-1">
+                        <span class="text-green-700 font-semibold dark:text-green-400">+3</span>
+                        <span>since last month</span>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="card bg-white block border border-base-200 flex flex-col grow overflow-hidden p-6 relative rounded-default shadow-xs dark:bg-base-900 dark:border-base-800  lg:w-1/3">
+                <span class="grow relative ">
+                    <p class="leading-relaxed mb-0 text-sm">
+                        Active memberships
+                    </p>
+                    <div
+                        class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
+                        1
+                    </div>
+                    <div class="absolute right-0 top-0">
+                        <span
+                            class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
+                            Last 3 month
+                        </span>
+                    </div>
+                </span>
+                <div
+                    class="border-t border-base-200 flex items-center justify-center -mb-6 -mx-6 mt-50 mt-6 pb-2 pt-2 px-6 text-sm dark:border-base-800">
+                    <div class="flex items-center gap-1">
+                        <span class="text-green-700 font-semibold dark:text-green-400">+1</span>
+                        <span>since last month</span>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="card bg-white block border border-base-200 flex flex-col grow overflow-hidden p-6 relative rounded-default shadow-xs dark:bg-base-900 dark:border-base-800  lg:w-1/3">
+                <span class="grow relative ">
+                    <p class="leading-relaxed mb-0 text-sm">
+                        Total messages
+                    </p>
+                    <div
+                        class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
+                        1000
+                    </div>
+                    <div class="absolute right-0 top-0">
+                        <span
+                            class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
+                            Last 3 month
+                        </span>
+                    </div>
+                </span>
+                <div
+                    class="border-t border-base-200 flex items-center justify-center -mb-6 -mx-6 mt-50 mt-6 pb-2 pt-2 px-6 text-sm dark:border-base-800">
+                    <div class="flex items-center gap-1">
+                        <span class="text-green-700 font-semibold dark:text-green-400">+3</span>
+                        <span>since last month</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="tab cursor-pointer text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition">
-            Subscriptions
+        <div class="card dark:border-base-800 rounded-lg border rounded-default bg-card text-card-foreground shadow-sm col-span-3 transform transition-all duration-300 hover:shadow-lg"
+            data-v0-t="card">
+            <div class="flex flex-col space-y-1.5 p-6">
+                <h3 class="text-2xl font-semibold leading-none tracking-tight">Recent Activities</h3>
+                <p class="text-sm text-muted-foreground mt-2">You had 12 chatbot interactions today</p>
+            </div>
+            <div class="p-6 pt-0">
+                <div class="space-y-8 flex flex-col gap-5">
+                    <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
+                            class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9"><img
+                                class="aspect-square h-full w-full" alt="Avatar"
+                                src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
+                        <div class="ml-4 space-y-1">
+                            <p class="text-sm font-medium leading-none">Olivia Martin</p>
+                            <p class="text-sm text-muted-foreground">Created a new chatbot</p>
+                        </div>
+                        <div class="ml-auto font-medium">2 hours ago</div>
+                    </div>
+                    <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
+                            class="relative shrink-0 overflow-hidden rounded-full flex h-9 w-9 items-center justify-center space-y-0 border"><img
+                                class="aspect-square h-full w-full" alt="Avatar"
+                                src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
+                        <div class="ml-4 space-y-1">
+                            <p class="text-sm font-medium leading-none">Jackson Lee</p>
+                            <p class="text-sm text-muted-foreground">Upgraded subscription</p>
+                        </div>
+                        <div class="ml-auto font-medium">5 hours ago</div>
+                    </div>
+                    <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
+                            class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9"><img
+                                class="aspect-square h-full w-full" alt="Avatar"
+                                src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
+                        <div class="ml-4 space-y-1">
+                            <p class="text-sm font-medium leading-none">Isabella Nguyen</p>
+                            <p class="text-sm text-muted-foreground">Renewed subscription</p>
+                        </div>
+                        <div class="ml-auto font-medium">Yesterday</div>
+                    </div>
+                    <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
+                            class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9"><img
+                                class="aspect-square h-full w-full" alt="Avatar"
+                                src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
+                        <div class="ml-4 space-y-1">
+                            <p class="text-sm font-medium leading-none">William Kim</p>
+                            <p class="text-sm text-muted-foreground">Added team member</p>
+                        </div>
+                        <div class="ml-auto font-medium">Yesterday</div>
+                    </div>
+                    <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
+                            class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9"><img
+                                class="aspect-square h-full w-full" alt="Avatar"
+                                src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
+                        <div class="ml-4 space-y-1">
+                            <p class="text-sm font-medium leading-none">Sofia Davis</p>
+                            <p class="text-sm text-muted-foreground">Deleted a chatbot</p>
+                        </div>
+                        <div class="ml-auto font-medium">3 days ago</div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div
+            class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 p-6 flex flex-col gap-5 lg:w-1/3">
+            <div class="relative">
+                <p class="text-sm leading-relaxed mb-1">Latest Chatbot</p>
+                <div
+                    class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
+                    MySupportBot
+                </div>
+                <div class="absolute top-0 right-0">
+                    <span
+                        class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
+                        New
+                    </span>
+                </div>
+            </div>
+
+            <div class="text-sm space-y-1 flex flex-col gap-2">
+                <div class="flex justify-between">
+                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Created At:</span>
+                    <span class="text-font-important-light dark:text-font-important-dark">May 20, 2025</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Used Subscription:</span>
+                    <span class="text-font-important-light dark:text-font-important-dark">Pro Plan</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Subscription Price:</span>
+                    <span class="text-font-important-light dark:text-font-important-dark">$49/month</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Expired At:</span>
+                    <span class="text-font-important-light dark:text-font-important-dark">Jun 20, 2025</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-6 lg:flex-row">
+  <!-- Latest Chatbot Card -->
+  <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 p-6 flex flex-col gap-5 lg:w-1/2">
+    <div class="relative">
+      <p class="text-sm leading-relaxed mb-1">Latest Chatbot</p>
+      <div class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
+        MySupportBot
+      </div>
+      <div class="absolute top-0 right-0">
+        <span
+          class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
+          New
+        </span>
+      </div>
     </div>
-    
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-4">
-        <div class="card rounded-lg border bg-card text-card-foreground shadow-sm transform transition-all duration-300 hover:scale-105" data-v0-t="card"><div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"><h3 class="tracking-tight text-sm font-medium">Active Chatbots</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot h-4 w-4 text-muted-foreground"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg></div><div class="p-6 pt-0"><div class="text-2xl font-bold">+12</div><p class="text-xs text-muted-foreground">+3 since last month</p></div></div>
-    </div>        
+    <div class="text-sm space-y-1">
+      <div class="flex justify-between">
+        <span class="text-font-subtle-light dark:text-font-subtle-dark">Created At:</span>
+        <span class="text-font-important-light dark:text-font-important-dark">May 20, 2025</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-font-subtle-light dark:text-font-subtle-dark">Used Subscription:</span>
+        <span class="text-font-important-light dark:text-font-important-dark">Pro Plan</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-font-subtle-light dark:text-font-subtle-dark">Subscription Price:</span>
+        <span class="text-font-important-light dark:text-font-important-dark">$49/month</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-font-subtle-light dark:text-font-subtle-dark">Expired At:</span>
+        <span class="text-font-important-light dark:text-font-important-dark">Jun 20, 2025</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expiring Membership Card -->
+  <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 p-6 flex flex-col gap-5 lg:w-1/2">
+    <div class="relative">
+      <p class="text-sm leading-relaxed mb-1">Expiring Membership</p>
+      <div class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
+        Premium Plan
+      </div>
+      <div class="absolute top-0 right-0">
+        <span
+          class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-400">
+          Expiring Soon
+        </span>
+      </div>
+    </div>
+    <div class="text-sm space-y-1">
+      <div class="flex justify-between">
+        <span class="text-font-subtle-light dark:text-font-subtle-dark">Purchased At:</span>
+        <span class="text-font-important-light dark:text-font-important-dark">Apr 01, 2025</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-font-subtle-light dark:text-font-subtle-dark">Expired At:</span>
+        <span class="text-font-important-light dark:text-font-important-dark">May 25, 2025</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-font-subtle-light dark:text-font-subtle-dark">Price:</span>
+        <span class="text-font-important-light dark:text-font-important-dark">$29/month</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-font-subtle-light dark:text-font-subtle-dark">Status:</span>
+        <span class="text-yellow-600 font-medium dark:text-yellow-400">Expiring</span>
+      </div>
+    </div>
+  </div>
 </div>
 
+
+    </div>
+</div>
 {% endblock %}

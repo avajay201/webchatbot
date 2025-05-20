@@ -1,16 +1,11 @@
-.custom-dashboard .tab.active {
-    background-color: #ffffff0d;
-    border-radius: 5px;
+.mt-50 {
+    margin-top: 50px;
 }
 
-.custom-dashboard .card {
-    border-radius: .5rem;
+.card {
+    transition-duration: 0.5s;
 }
 
-.custom-dashboard .card h3 {
-    color: #f0f8ffd1;
-}
-
-.custom-dashboard .card .text-2xl, .custom-dashboard .card svg {
-    color: aliceblue;
+.card:hover {
+    border-color: aqua;
 }
