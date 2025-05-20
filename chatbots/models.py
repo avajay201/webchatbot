@@ -13,9 +13,9 @@ class Chatbot(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     subscription = models.ForeignKey(UserSubscription, on_delete=models.CASCADE)
-    website_url = models.URLField(unique=True, help_text="Example: https://yourdomain.com — Enter the exact website URL.")
+    website_url = models.URLField(help_text="Example: https://yourdomain.com — Enter the exact website URL.")
     api_key = models.CharField(max_length=150)
     sdk = models.CharField(max_length=150)
     status = models.CharField(

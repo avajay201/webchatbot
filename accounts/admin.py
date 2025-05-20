@@ -8,7 +8,8 @@ admin.site.unregister(Group)
 
 @admin.register(User)
 class UserAdmin(ModelAdmin):
-    pass
+    fields = ('username', 'password', 'first_name', 'last_name', 'is_verified', 'is_superuser', 'is_staff', 'is_active', 'last_login', 'date_joined', 'groups', 'user_permissions')
+    readonly_fields = ('password', )
 
 @admin.register(Group)
 class GroupAdmin(ModelAdmin):

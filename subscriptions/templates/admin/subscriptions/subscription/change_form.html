@@ -7,9 +7,6 @@
 {% endif %}
 <div class="submit-row">
     <div class="flex items-center gap-3 justify-start" style="justify-content: flex-start; margin-left: 20px; margin-bottom: 20px;">
-        <a href="{% url 'admin:subscriptions_subscription_changelist' %}" class="border border-base-200 font-medium px-3 py-2 rounded-default text-center transition-all lg:block lg:w-auto dark:border-base-700 dark:hover:text-base-200 dark:hover:bg-base-900">
-            {% trans "Close" %}
-        </a>
         {% if original.pk and not request.user.is_superuser %}
             <a style="background-color: #008000c4; color: white;" href="{% url 'admin:purchase_subscription' original.pk %}" class="border border-base-200 font-medium px-3 py-2 rounded-default text-center transition-all lg:block lg:w-auto dark:border-base-700 dark:hover:text-base-200 dark:hover:bg-base-900">
                 {% trans "Purchase" %}

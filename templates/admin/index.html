@@ -1,0 +1,38 @@
+{% extends 'admin/base.html' %}
+
+{% load i18n %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}
+    {% if subtitle %}
+        {{ subtitle }} |
+    {% endif %}
+
+    {{ title }} | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<div style="background-color: rgb(51 56 66 / 12%); border-radius: 8px;" class="custom-dashboard w-full mt-10">
+    <div class="bg-indigo-600 dark:bg-indigo-800 text-white rounded-2xl shadow-lg p-4 mb-6 flex items-center justify-start w-full">
+        <div class="tab active shadow-lg cursor-pointer text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition">
+            Overview
+        </div>
+        <div class="tab cursor-pointer text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition">
+            Chatbots
+        </div>
+        <div class="tab cursor-pointer text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition">
+            Subscriptions
+        </div>
+    </div>
+    
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-4">
+        <div class="card rounded-lg border bg-card text-card-foreground shadow-sm transform transition-all duration-300 hover:scale-105" data-v0-t="card"><div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"><h3 class="tracking-tight text-sm font-medium">Active Chatbots</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot h-4 w-4 text-muted-foreground"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg></div><div class="p-6 pt-0"><div class="text-2xl font-bold">+12</div><p class="text-xs text-muted-foreground">+3 since last month</p></div></div>
+    </div>        
+</div>
+
+{% endblock %}

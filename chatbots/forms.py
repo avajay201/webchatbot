@@ -35,7 +35,11 @@ class ChatbotForm(forms.ModelForm):
         if self.instance.pk is None and 'subscription' in data_fields:
             user = self.request.user
             subscription =  cleaned_data['subscription']
-            user_chat_bots = Chatbot.objects.filter(user=user, subscription=subscription, status='success').count()
+            user_chat_bots = Chatbot.objects.filter(
+                user=user,
+                subscription=subscription,
+                status__in=['success', 'in_progress']
+            ).count()
 
             if user_chat_bots >= subscription.subscription.max_chatbots:
                 raise forms.ValidationError(
@@ -50,7 +54,15 @@ class ChatbotForm(forms.ModelForm):
                     f"This website URL is unreachable."
                 )
 
-        self.instance.status = 'in_progress'
+        if Chatbot.objects.exclude(pk=self.instance.pk).filter(name=cleaned_data['name'], status__in=['in_progress', 'success']).exists():
+            raise forms.ValidationError("Chatbot with this name already exists and is active or in progress.")
+
+        if 'website_url' in data_fields:
+            if Chatbot.objects.exclude(pk=self.instance.pk).filter(website_url=cleaned_data['website_url'], status__in=['in_progress', 'success']).exists():
+                raise forms.ValidationError("Chatbot with this website URL already exists and is active or in progress.")
+
+        if self.instance.status != 'success':
+            self.instance.status = 'in_progress'
         return cleaned_data
 
 class ChatbotCustomizationForm(forms.ModelForm):

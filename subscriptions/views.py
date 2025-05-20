@@ -1,5 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
+from django.shortcuts import redirect
 from subscriptions.models import Subscription, UserSubscription, PaymentTransaction
 from accounts.models import User
 import razorpay
@@ -18,9 +19,10 @@ def razorpay_callback(request):
 
     payment_id = request.GET.get('razorpay_payment_id')
     payment_link_id = request.GET.get('razorpay_payment_link_id')
+    redirect_url = request.GET.get('next') or "/dashboard/"
 
     if not payment_id or not payment_link_id:
-        return HttpResponseBadRequest("Invalid request")
+        return redirect(f"{redirect_url}?status=error")
 
     try:
         payment_info = client.payment.fetch(payment_id)
@@ -29,12 +31,12 @@ def razorpay_callback(request):
         sub_id = payment_info.get("notes", {}).get("sub_id")
         
         if not user_id or not sub_id:
-            return HttpResponseBadRequest("Invalid request")
+            return redirect(f"{redirect_url}?status=error")
 
         user = User.objects.filter(id=user_id).first()
 
         if not user:
-            return HttpResponseBadRequest("Invalid request")
+            return redirect(f"{redirect_url}?status=error")
 
         amount = Decimal(payment_info['amount']) / 100
         
@@ -55,7 +57,7 @@ def razorpay_callback(request):
             status='completed' if payment_info['status'] == 'captured' else 'failed',
         )
 
-        return JsonResponse({'message': 'Payment recorded successfully'})
+        return redirect(f"{redirect_url}usersubscription/{user_subscription.id}/change/?status=success")
     except Exception as e:
         print('Payment status capturing error:', e)
-        return JsonResponse({'error': 'Something went wrong'}, status=400)
+        return redirect(f"{redirect_url}subscription/{subscription.id}/change/?status=error")

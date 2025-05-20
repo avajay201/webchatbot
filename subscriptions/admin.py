@@ -24,6 +24,7 @@ from django_celery_beat.admin import CrontabScheduleAdmin as BaseCrontabSchedule
 from django_celery_beat.admin import PeriodicTaskAdmin as BasePeriodicTaskAdmin
 from django_celery_beat.admin import PeriodicTaskForm, TaskSelectWidget
 from unfold.widgets import UnfoldAdminSelectWidget, UnfoldAdminTextInputWidget
+from django_celery_results.models import TaskResult
 
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_ID))
@@ -47,7 +48,7 @@ class SubscriptionAdmin(ModelAdmin):
                     "sms": True,
                     "email": True,
                 },
-                "callback_url": f"{settings.BASE_URL}/payment/callback/",
+                "callback_url": f"{settings.BASE_URL}/payment/callback/?next=/dashboard/subscriptions/",
                 "callback_method": "get",
                 "notes": {
                     "user_id": user.id,
@@ -99,6 +100,15 @@ class SubscriptionAdmin(ModelAdmin):
             return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
         return redirect(payment_url)
 
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        status = request.GET.get("status")
+        msg = request.GET.get("msg")
+
+        if status == "error":
+            messages.error(request, "Subscription purchased failed.")
+
+        return super().change_view(request, object_id, form_url, extra_context)
+
 @admin.register(UserSubscription)
 class UserSubscriptionAdmin(ModelAdmin):
     def get_fields(self, request, obj=None):
@@ -107,16 +117,27 @@ class UserSubscriptionAdmin(ModelAdmin):
             return [field for field in fields if field not in ['user']]
         return fields
 
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        status = request.GET.get("status")
+        msg = request.GET.get("msg")
+
+        if status == "success":
+            messages.success(request, "Subscription purchased successfully.")
+
+        return super().change_view(request, object_id, form_url, extra_context)
+
 @admin.register(PaymentTransaction)
 class PaymentTransactionAdmin(ModelAdmin):
     readonly_fields = ('created_at', )
 
 
+# Celery models
 admin.site.unregister(PeriodicTask)
 admin.site.unregister(IntervalSchedule)
 admin.site.unregister(CrontabSchedule)
 admin.site.unregister(SolarSchedule)
 admin.site.unregister(ClockedSchedule)
+admin.site.unregister(TaskResult)
 
 class UnfoldTaskSelectWidget(UnfoldAdminSelectWidget, TaskSelectWidget):
     pass
@@ -145,4 +166,8 @@ class SolarScheduleAdmin(ModelAdmin):
 
 @admin.register(ClockedSchedule)
 class ClockedScheduleAdmin(BaseClockedScheduleAdmin, ModelAdmin):
+    pass
+
+@admin.register(TaskResult)
+class TaskResultAdmin(ModelAdmin):
     pass

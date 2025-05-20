@@ -14,6 +14,8 @@ from pathlib import Path
 from datetime import timedelta
 from django.templatetags.static import static
 import os
+from django.utils.translation import gettext_lazy as _
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'colorfield',
     'django_celery_beat',
+    'django_celery_results',
     'accounts',
     'subscriptions',
     'chatbots',
@@ -76,7 +79,7 @@ ROOT_URLCONF = 'webChatBot.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -154,7 +157,9 @@ UNFOLD = {
     "SITE_TITLE": "Web ChatBot",
     "SITE_HEADER": "Web ChatBot",
     "SITE_URL": "/dashboard/",
+    # "SITE_SUBHEADER": "Appears under SITE_HEADER",
     "SITE_ICON": lambda request: static("logo.png"),
+    "SHOW_VIEW_ON_SITE": False,
     "COLORS": {
         "primary": {
             "50": "250 245 255",
@@ -169,6 +174,165 @@ UNFOLD = {
             "900": "88 28 135",
         },
     },
+    "SHOW_BACK_BUTTON": True,
+    
+    "SIDEBAR": {
+        "show_search": True,
+        "navigation": [
+            # All users dashboard
+            {
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "home",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                ]
+            },
+            # Super user settings
+            {
+                "title": _("User Settings"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Users"),
+                        "icon": "people",
+                        "link": reverse_lazy("admin:accounts_user_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Groups"),
+                        "icon": "groups",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                ],
+            },
+            # Super user settings
+            {
+                "title": _("Chatbots and Subscriptions"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Chatbot"),
+                        "icon": "message",
+                        "link": reverse_lazy("admin:chatbots_chatbot_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Chatbot Customization"),
+                        "icon": "sliders",
+                        "link": reverse_lazy("admin:chatbots_chatbotcustomization_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Available Subscriptions"),
+                        "icon": "badge",
+                        "link": reverse_lazy("admin:subscriptions_subscription_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("User Subscriptions"),
+                        "icon": "bookmark",
+                        "link": reverse_lazy("admin:subscriptions_usersubscription_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Payment Transactions"),
+                        "icon": "payment",
+                        "link": reverse_lazy("admin:subscriptions_paymenttransaction_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                ],
+            },
+            {
+                "title": _("Celery Tasks"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Task Result"),
+                        "icon": "info",
+                        "link": reverse_lazy("admin:django_celery_results_taskresult_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Clocked"),
+                        "icon": "schedule",
+                        "link": reverse_lazy("admin:django_celery_beat_clockedschedule_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Crontabs"),
+                        "icon": "event",
+                        "link": reverse_lazy("admin:django_celery_beat_crontabschedule_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Intervals"),
+                        "icon": "repeat",
+                        "link": reverse_lazy("admin:django_celery_beat_intervalschedule_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Periodic Tasks"),
+                        "icon": "alarm",
+                        "link": reverse_lazy("admin:django_celery_beat_periodictask_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Solar Events"),
+                        "icon": "light",
+                        "link": reverse_lazy("admin:django_celery_beat_solarschedule_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                ],
+            },
+            # User Settings
+            {
+                "items": [
+                    {
+                        "title": _("My Chatbots"),
+                        "icon": "message",
+                        "link": reverse_lazy("admin:chatbots_chatbot_changelist"),
+                        "permission": lambda request: not request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Chatbot Customization"),
+                        "icon": "sliders",
+                        "link": reverse_lazy("admin:chatbots_chatbotcustomization_changelist"),
+                        "permission": lambda request: not request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Available Subscriptions"),
+                        "icon": "badge",
+                        "link": reverse_lazy("admin:subscriptions_subscription_changelist"),
+                        "permission": lambda request: not request.user.is_superuser,
+                    },
+                    {
+                        "title": _("My Subscriptions"),
+                        "icon": "bookmark",
+                        "link": reverse_lazy("admin:subscriptions_usersubscription_changelist"),
+                        "permission": lambda request: not request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Payment Transactions"),
+                        "icon": "payment",
+                        "link": reverse_lazy("admin:subscriptions_paymenttransaction_changelist"),
+                        "permission": lambda request: not request.user.is_superuser,
+                    },
+                ]
+            },
+        ],
+    },
+    "STYLES": [
+        lambda request: static("css/styles.css"),
+    ],
+    "SCRIPTS": [
+        lambda request: static("js/scripts.js"),
+    ],
 }
 
 

@@ -35,4 +35,4 @@ class PaymentTransaction(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user_subscription.subscription.name
+        return self.user_subscription.subscription.name if self.user_subscription else 'None'
