@@ -9,3 +9,10 @@
 .card:hover {
     border-color: aqua;
 }
+
+.sub-active {
+    background-color: #3c683c6b;
+    padding: 3px 7px;
+    border-radius: 15px;
+    font-size: 12px;
+}

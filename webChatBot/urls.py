@@ -24,11 +24,11 @@ urlpatterns = [
     path('api/auth/', include('accounts.urls')),
     path('api/chat-bot/', include('chatbots.urls')),
     path('payment/', include('subscriptions.urls')),
+    path('', include('core.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-# Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

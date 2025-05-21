@@ -333,6 +333,7 @@ UNFOLD = {
     "SCRIPTS": [
         lambda request: static("js/scripts.js"),
     ],
+    "DASHBOARD_CALLBACK": "core.views.dashboard_callback",
 }
 
 
