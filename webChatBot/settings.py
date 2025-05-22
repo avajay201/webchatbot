@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'colorfield',
-    'django_celery_beat',
     'django_celery_results',
     'accounts',
     'subscriptions',
