@@ -246,49 +246,6 @@ UNFOLD = {
                     },
                 ],
             },
-            {
-                "title": _("Celery Tasks"),
-                "separator": True,
-                "collapsible": True,
-                "items": [
-                    {
-                        "title": _("Task Result"),
-                        "icon": "info",
-                        "link": reverse_lazy("admin:django_celery_results_taskresult_changelist"),
-                        "permission": lambda request: request.user.is_superuser,
-                    },
-                    {
-                        "title": _("Clocked"),
-                        "icon": "schedule",
-                        "link": reverse_lazy("admin:django_celery_beat_clockedschedule_changelist"),
-                        "permission": lambda request: request.user.is_superuser,
-                    },
-                    {
-                        "title": _("Crontabs"),
-                        "icon": "event",
-                        "link": reverse_lazy("admin:django_celery_beat_crontabschedule_changelist"),
-                        "permission": lambda request: request.user.is_superuser,
-                    },
-                    {
-                        "title": _("Intervals"),
-                        "icon": "repeat",
-                        "link": reverse_lazy("admin:django_celery_beat_intervalschedule_changelist"),
-                        "permission": lambda request: request.user.is_superuser,
-                    },
-                    {
-                        "title": _("Periodic Tasks"),
-                        "icon": "alarm",
-                        "link": reverse_lazy("admin:django_celery_beat_periodictask_changelist"),
-                        "permission": lambda request: request.user.is_superuser,
-                    },
-                    {
-                        "title": _("Solar Events"),
-                        "icon": "light",
-                        "link": reverse_lazy("admin:django_celery_beat_solarschedule_changelist"),
-                        "permission": lambda request: request.user.is_superuser,
-                    },
-                ],
-            },
             # User Settings
             {
                 "items": [

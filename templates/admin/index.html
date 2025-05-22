@@ -44,7 +44,7 @@
                             </p>
                             <div
                                 class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
-                                3
+                                {{ active_chatbots }}
                             </div>
                             <div class="absolute right-0 top-0">
                                 <span
@@ -56,7 +56,7 @@
                         <div
                             class="border-t border-base-200 flex items-center justify-center -mb-6 -mx-6 mt-50 mt-6 pb-2 pt-2 px-6 text-sm dark:border-base-800">
                             <div class="flex items-center gap-1">
-                                <span class="text-green-700 font-semibold dark:text-green-400">+3</span>
+                                <span class="text-green-700 font-semibold dark:text-green-400">+{{ chatbots_created_last_month }}</span>
                                 <span>since last month</span>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                             </p>
                             <div
                                 class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
-                                1
+                                {{ active_memberships }}
                             </div>
                             <div class="absolute right-0 top-0">
                                 <span
@@ -81,7 +81,7 @@
                         <div
                             class="border-t border-base-200 flex items-center justify-center -mb-6 -mx-6 mt-50 mt-6 pb-2 pt-2 px-6 text-sm dark:border-base-800">
                             <div class="flex items-center gap-1">
-                                <span class="text-green-700 font-semibold dark:text-green-400">+1</span>
+                                <span class="text-green-700 font-semibold dark:text-green-400">+{{ memberships_purchased_last_month }}</span>
                                 <span>since last month</span>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                             </p>
                             <div
                                 class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
-                                1000
+                                {{ total_messages }}
                             </div>
                             <div class="absolute right-0 top-0">
                                 <span
@@ -106,220 +106,159 @@
                         <div
                             class="border-t border-base-200 flex items-center justify-center -mb-6 -mx-6 mt-50 mt-6 pb-2 pt-2 px-6 text-sm dark:border-base-800">
                             <div class="flex items-center gap-1">
-                                <span class="text-green-700 font-semibold dark:text-green-400">+3</span>
+                                <span class="text-green-700 font-semibold dark:text-green-400">+{{ total_messages_last_month }}</span>
                                 <span>since last month</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card dark:border-base-800 rounded-lg border border-base-200 rounded-default bg-card text-card-foreground shadow-sm col-span-3 transform transition-all duration-300 hover:shadow-lg"
-                    data-v0-t="card">
-                    <div class="flex flex-col space-y-1.5 p-6">
-                        <h3 class="text-2xl font-semibold leading-none tracking-tight">Recent Activities</h3>
-                        <p class="text-sm text-muted-foreground mt-2">You had 12 chatbot interactions today</p>
-                    </div>
-                    <div class="p-6 pt-0">
-                        <div class="space-y-8 flex flex-col gap-5">
-                            <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
-                                    class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9"><img
-                                        class="aspect-square h-full w-full" alt="Avatar"
-                                        src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
-                                <div class="ml-4 space-y-1">
-                                    <p class="text-sm font-medium leading-none">Olivia Martin</p>
-                                    <p class="text-sm text-muted-foreground">Created a new chatbot</p>
+                <div class="flex flex-col gap-8 lg:flex-row">
+                    {% if latest_chatbot %}
+                        <div
+                            class="card bg-white block border border-base-200 flex flex-col grow overflow-hidden p-6 relative rounded-default shadow-xs dark:bg-base-900 dark:border-base-800  lg:w-1/3 hover:shadow-lg">
+                            <div class="relative">
+                                <p class="text-sm leading-relaxed mb-1">Latest Chatbot</p>
+                                <div
+                                    class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
+                                    {{ latest_chatbot.name }}
                                 </div>
-                                <div class="ml-auto font-medium">2 hours ago</div>
-                            </div>
-                            <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
-                                    class="relative shrink-0 overflow-hidden rounded-full flex h-9 w-9 items-center justify-center space-y-0 border"><img
-                                        class="aspect-square h-full w-full" alt="Avatar"
-                                        src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
-                                <div class="ml-4 space-y-1">
-                                    <p class="text-sm font-medium leading-none">Jackson Lee</p>
-                                    <p class="text-sm text-muted-foreground">Upgraded subscription</p>
+                                <div class="absolute top-0 right-0">
+                                    <span
+                                        class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
+                                        New
+                                    </span>
                                 </div>
-                                <div class="ml-auto font-medium">5 hours ago</div>
                             </div>
-                            <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
-                                    class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9"><img
-                                        class="aspect-square h-full w-full" alt="Avatar"
-                                        src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
-                                <div class="ml-4 space-y-1">
-                                    <p class="text-sm font-medium leading-none">Isabella Nguyen</p>
-                                    <p class="text-sm text-muted-foreground">Renewed subscription</p>
-                                </div>
-                                <div class="ml-auto font-medium">Yesterday</div>
-                            </div>
-                            <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
-                                    class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9"><img
-                                        class="aspect-square h-full w-full" alt="Avatar"
-                                        src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
-                                <div class="ml-4 space-y-1">
-                                    <p class="text-sm font-medium leading-none">William Kim</p>
-                                    <p class="text-sm text-muted-foreground">Added team member</p>
-                                </div>
-                                <div class="ml-auto font-medium">Yesterday</div>
-                            </div>
-                            <div class="flex items-center transform transition-all duration-300 hover:translate-x-1"><span
-                                    class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9"><img
-                                        class="aspect-square h-full w-full" alt="Avatar"
-                                        src="https://kzmlpfnnnnpfd8jawh8n.lite.vusercontent.net/placeholder.svg?height=36&width=36"></span>
-                                <div class="ml-4 space-y-1">
-                                    <p class="text-sm font-medium leading-none">Sofia Davis</p>
-                                    <p class="text-sm text-muted-foreground">Deleted a chatbot</p>
-                                </div>
-                                <div class="ml-auto font-medium">3 days ago</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="justify-content: space-evenly;" class="flex flex-row">
-                    <div
-                        class="card bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 p-6 flex flex-col gap-5 lg:w-1/3 hover:shadow-lg">
-                        <div class="relative">
-                            <p class="text-sm leading-relaxed mb-1">Latest Chatbot</p>
-                            <div
-                                class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
-                                MySupportBot
-                            </div>
-                            <div class="absolute top-0 right-0">
-                                <span
-                                    class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
-                                    New
-                                </span>
-                            </div>
-                        </div>
 
-                        <div class="text-sm space-y-1 flex flex-col gap-2">
-                            <div class="flex justify-between">
-                                <span class="text-font-subtle-light dark:text-font-subtle-dark">Created At:</span>
-                                <span class="text-font-important-light dark:text-font-important-dark">May 20, 2025</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-font-subtle-light dark:text-font-subtle-dark">Used Subscription:</span>
-                                <span class="text-font-important-light dark:text-font-important-dark">Pro Plan</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-font-subtle-light dark:text-font-subtle-dark">Subscription Price:</span>
-                                <span class="text-font-important-light dark:text-font-important-dark">$49/month</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-font-subtle-light dark:text-font-subtle-dark">Expired At:</span>
-                                <span class="text-font-important-light dark:text-font-important-dark">Jun 20, 2025</span>
+                            <div class="text-sm space-y-1 flex flex-col gap-2">
+                                <div class="flex justify-between">
+                                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Created At:</span>
+                                    <span class="text-font-important-light dark:text-font-important-dark">{{ latest_chatbot.created_at|date:"F d, Y" }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Used Subscription:</span>
+                                    <span class="text-font-important-light dark:text-font-important-dark">{{ latest_chatbot.subscription.subscription.name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Subscription Price:</span>
+                                    <span class="text-font-important-light dark:text-font-important-dark">₹{{ latest_chatbot.subscription.subscription.price }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div
-                        class="card bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 p-6 flex flex-col gap-5 lg:w-1/3 hover:shadow-lg">
-                        <div class="relative">
-                            <p class="text-sm leading-relaxed mb-1">Expiring Soon</p>
-                            <div
-                                class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
-                                Basic Plan
+                    {% endif %}
+                    {% if expiring_soon %}
+                        <div
+                            class="card bg-white block border border-base-200 flex flex-col grow overflow-hidden p-6 relative rounded-default shadow-xs dark:bg-base-900 dark:border-base-800  lg:w-1/3 hover:shadow-lg">
+                            <div class="relative">
+                                <p class="text-sm leading-relaxed mb-1">Expiring Soon</p>
+                                <div
+                                    class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">
+                                    {{ expiring_soon.subscription.name }}
+                                </div>
+                                <div class="absolute top-0 right-0">
+                                    <span
+                                        class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
+                                        Expiring Soon
+                                    </span>
+                                </div>
                             </div>
-                            <div class="absolute top-0 right-0">
-                                <span
-                                    class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] uppercase whitespace-nowrap bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-400">
-                                    New
-                                </span>
-                            </div>
-                        </div>
 
-                        <div class="text-sm space-y-1 flex flex-col gap-2">
-                            <div class="flex justify-between">
-                                <span class="text-font-subtle-light dark:text-font-subtle-dark">Purchased At:</span>
-                                <span class="text-font-important-light dark:text-font-important-dark">May 20, 2025</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-font-subtle-light dark:text-font-subtle-dark">Subscription Name:</span>
-                                <span class="text-font-important-light dark:text-font-important-dark">Pro Plan</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-font-subtle-light dark:text-font-subtle-dark">Subscription Price:</span>
-                                <span class="text-font-important-light dark:text-font-important-dark">$49/month</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-font-subtle-light dark:text-font-subtle-dark">Expired At:</span>
-                                <span class="text-font-important-light dark:text-font-important-dark">Jun 20, 2025</span>
+                            <div class="text-sm space-y-1 flex flex-col gap-2">
+                                <div class="flex justify-between">
+                                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Purchased At:</span>
+                                    <span class="text-font-important-light dark:text-font-important-dark">{{ expiring_soon.start_date|date:"F d, Y" }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Subscription Name:</span>
+                                    <span class="text-font-important-light dark:text-font-important-dark">{{ expiring_soon.subscription.name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Subscription Price:</span>
+                                    <span class="text-font-important-light dark:text-font-important-dark">₹{{ expiring_soon.subscription.price }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-font-subtle-light dark:text-font-subtle-dark">Expired At:</span>
+                                    <span class="text-font-important-light dark:text-font-important-dark">{{ expiring_soon.end_date|date:"F d, Y" }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             {% elif current_tab == 'chatbots' %}
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {% for i in chatbots %}
-                    <div class="card bg-white border border-base-200 flex flex-col grow overflow-hidden relative rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 hover:shadow-lg"
-                        data-v0-t="card">
-                        <div class="p-6 flex flex-row items-center justify-between space-y-0">
-                            <div>
-                                <div class="font-semibold leading-none tracking-tight flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-bot mr-2 h-5 w-5">
-                                        <path d="M12 8V4H8"></path>
-                                        <rect width="16" height="12" x="4" y="8" rx="2"></rect>
-                                        <path d="M2 14h2"></path>
-                                        <path d="M20 14h2"></path>
-                                        <path d="M15 13v2"></path>
-                                        <path d="M9 13v2"></path>
-                                    </svg>
-                                    <div style="font-size: 15px;">Customer Support Bot</div>
-                                </div>
-                            </div>
-                            <button
-                                class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-6 w-6 p-0"
-                                type="button" id="radix-«r1t»" aria-haspopup="menu" aria-expanded="false" data-state="closed">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    stroke-width="2" width="20" height="20">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-
-                            </button>
-                        </div>
-                        <div class="p-6 pt-0">
-                            <div class="flex flex-col space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] whitespace-nowrap bg-primary-100 text-blue-800 dark:bg-primary-500/20 dark:text-primary-400"
-                                        data-v0-t="badge">Status</div>
-                                    <div class="flex items-center space-x-2">
-                                        <span class="text-sm text-muted-foreground">Active</span>
+                    {% for chatbot in chatbots %}
+                        <div class="card bg-white border border-base-200 flex flex-col grow overflow-hidden relative rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 hover:shadow-lg"
+                            data-v0-t="card">
+                            <div class="p-6 flex flex-row items-center justify-between space-y-0">
+                                <div>
+                                    <div class="font-semibold leading-none tracking-tight flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="lucide lucide-bot mr-2 h-5 w-5">
+                                            <path d="M12 8V4H8"></path>
+                                            <rect width="16" height="12" x="4" y="8" rx="2"></rect>
+                                            <path d="M2 14h2"></path>
+                                            <path d="M20 14h2"></path>
+                                            <path d="M15 13v2"></path>
+                                            <path d="M9 13v2"></path>
+                                        </svg>
+                                        <div style="font-size: 15px;">{{ chatbot.name }}</div>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between mt-2">
-                                    <span class="text-sm text-muted-foreground">Total messages</span>
-                                    <span class="font-medium">1,245</span>
-                                </div>
-                                <div class="flex items-center justify-between mt-2">
-                                    <span class="text-sm text-muted-foreground">Last used</span>
-                                    <span class="font-medium">2 minutes ago</span>
-                                </div>
-                                <div class="flex items-center justify-between mt-2">
-                                    <span class="text-sm text-muted-foreground">Created at</span>
-                                    <span class="font-medium">1 month ago</span>
-                                </div>
-                                <div class="flex items-center justify-between mt-2">
-                                    <span class="text-sm text-muted-foreground">Membership</span>
-                                    <span class="font-medium">Basic</span>
+                                <a
+                                    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-6 w-6 p-0"
+                                    type="button" href="/dashboard/chatbots/chatbot/{{chatbot.id}}/change/" id="radix-«r1t»" aria-haspopup="menu" aria-expanded="false" data-state="closed">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                        stroke-width="2" width="20" height="20">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+
+                                </a>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <div class="flex flex-col space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="inline-block font-semibold leading-normal px-2 py-1 rounded-default text-[11px] whitespace-nowrap bg-primary-100 text-blue-800 dark:bg-primary-500/20 dark:text-primary-400"
+                                            data-v0-t="badge">Status</div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-sm text-muted-foreground">{% if chatbot.is_active %}Active{% else %}Inactive{% endif %}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <span class="text-sm text-muted-foreground">Total messages</span>
+                                        <span class="font-medium">{{ chatbot.messages }}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <span class="text-sm text-muted-foreground">Last used</span>
+                                        <span class="font-medium">{% if chatbot.last_used %}{{ chatbot.last_used|timesince }} ago{% else %}-{% endif %}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <span class="text-sm text-muted-foreground">Created at</span>
+                                        <span class="font-medium">{{ chatbot.created_at|date:"F d, Y" }}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <span class="text-sm text-muted-foreground">Membership</span>
+                                        <span class="font-medium">{{ chatbot.subscription.subscription.name}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
             {% elif current_tab == 'subscriptions' %}
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {% for i in subscriptions %}
+                    {% for subscription in subscriptions %}
                     <div class="card bg-white border border-base-200 flex flex-col grow overflow-hidden relative rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 hover:shadow-lg"
                         data-v0-t="card">
                         <div class="p-6 flex flex-row items-center justify-between space-y-0">
-                            <div style="font-size: 17px;">Basic Plan</div>
-                            <div class="sub-active">Active</div>
+                            <div style="font-size: 17px;">{{ subscription.subscription.name }}</div>
+                            <div class="sub-active">{% if subscription.is_active %}Active{% else %}Inactive{% endif %}</div>
                         </div>
                         <div class="p-6 pt-0">
                             <div class="flex items-baseline">
-                                <span class="text-3xl font-bold tracking-tight">&#8377;299 - 1 month</span>
+                                <span class="text-3xl font-bold tracking-tight">{% if subscription.subscription.is_free_trial %}{{ subscription.subscription.days }} day{% if subscription.subscription.days > 1 %}s{% endif %}{% else %}₹{{ subscription.subscription.price }} - {{ subscription.subscription.duration_month }} month{% if subscription.subscription.duration_month > 1 %}s{% endif %}{% endif %}</span>
                             </div>
                             <ul class="space-y-2 mt-2">
                                 <li class="flex items-center">
@@ -329,24 +268,27 @@
                                         class="lucide lucide-check mr-2 h-4 w-4 text-green-600">
                                         <path d="M20 6 9 17l-5-5"></path>
                                     </svg>
-                                    <span>5 Chatbots</span>
+                                    <span>{{ subscription.subscription.max_chatbots }} Chatbots</span>
                                 </li>
-                                <li class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-check mr-2 h-4 w-4 text-green-600">
-                                        <path d="M20 6 9 17l-5-5"></path>
-                                    </svg>
-                                    <span>10,000 messages</span>
+                                <li style="border-top: 1px solid #ffffff1c;" class="flex justify-between">
+                                    <span class="mt-2">Chatbots used</span>
+                                    <span class="mt-2">{{ subscription.chatbot_count }}</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>Renewal count</span>
+                                    <span>{{ subscription.renewed_count }}</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>Last renewed on</span>
+                                    <span>{% if subscription.last_renewed %}{{ subscription.last_renewed|date:"F d, Y" }}{% else %}-{% endif %}</span>
                                 </li>
                                 <li style="border-top: 1px solid #ffffff1c;" class="flex justify-between">
                                     <span class="mt-2">Purchased at</span>
-                                    <span class="mt-2">21 May 2025</span>
+                                    <span class="mt-2">{{ subscription.start_date|date:"F d, Y" }}</span>
                                 </li>
                                 <li class="flex justify-between">
                                     <span>Expires at</span>
-                                    <span>21 June 2025</span>
+                                    <span>{{ subscription.end_date|date:"F d, Y" }}</span>
                                 </li>
                             </ul>
                         </div>

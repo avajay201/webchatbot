@@ -12,28 +12,11 @@ from django.shortcuts import get_object_or_404, redirect
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
-from django_celery_beat.models import (
-    ClockedSchedule,
-    CrontabSchedule,
-    IntervalSchedule,
-    PeriodicTask,
-    SolarSchedule,
-)
-from django_celery_beat.admin import ClockedScheduleAdmin as BaseClockedScheduleAdmin
-from django_celery_beat.admin import CrontabScheduleAdmin as BaseCrontabScheduleAdmin
-from django_celery_beat.admin import PeriodicTaskAdmin as BasePeriodicTaskAdmin
-from django_celery_beat.admin import PeriodicTaskForm, TaskSelectWidget
-from unfold.widgets import UnfoldAdminSelectWidget, UnfoldAdminTextInputWidget
-from django_celery_results.models import TaskResult
 
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_ID))
 
-@admin.register(Subscription)
-class SubscriptionAdmin(ModelAdmin):
-    change_form_template = "admin/subscriptions/subscription/change_form.html"
-
-    def get_payment_url(self, user, subscription):
+def get_payment_url(user, subscription):
         amount = int(subscription.price)
         try:
             payment_link = client.payment_link.create({
@@ -59,6 +42,11 @@ class SubscriptionAdmin(ModelAdmin):
             return payment_link['short_url']
         except Exception as e:
             print('Payment URL creating error:', e)
+
+
+@admin.register(Subscription)
+class SubscriptionAdmin(ModelAdmin):
+    change_form_template = "admin/subscriptions/subscription/change_form.html"
 
     def get_urls(self):
         urls = super().get_urls()
@@ -89,11 +77,11 @@ class SubscriptionAdmin(ModelAdmin):
             return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
         else:
             user_subscription = UserSubscription.objects.filter(user=request.user, subscription=subscription).first()
-            if user_subscription and user_subscription.end_date >= timezone.now():
-                messages.info(request, _("You already have an active subscription to this plan."))
+            if user_subscription:
+                messages.info(request, _("You already purchased this subscription."))
                 return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
 
-        payment_url = self.get_payment_url(request.user, subscription)
+        payment_url = get_payment_url(request.user, subscription)
         print('Subscription purchase payment URL:', payment_url)
         if not payment_url:
             messages.error(request, _("Failed to purchase this subscription."))
@@ -102,7 +90,6 @@ class SubscriptionAdmin(ModelAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         status = request.GET.get("status")
-        msg = request.GET.get("msg")
 
         if status == "error":
             messages.error(request, "Subscription purchased failed.")
@@ -111,18 +98,44 @@ class SubscriptionAdmin(ModelAdmin):
 
 @admin.register(UserSubscription)
 class UserSubscriptionAdmin(ModelAdmin):
+    change_form_template = "admin/subscriptions/usersubscription/change_form.html"
+
     def get_fields(self, request, obj=None):
         fields = super().get_fields(request, obj)
         if not request.user.is_superuser:
             return [field for field in fields if field not in ['user']]
         return fields
 
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "<int:subscription_id>/renew/",
+                self.admin_site.admin_view(self.renew_subscription),
+                name="renew_subscription",
+            ),
+        ]
+        return custom_urls + urls
+
+    def renew_subscription(self, request, subscription_id):
+        subscription = get_object_or_404(Subscription, pk=subscription_id)
+        payment_url = get_payment_url(request.user, subscription)
+        print('Subscription purchase payment URL:', payment_url)
+        if not payment_url:
+            messages.error(request, _("Failed to renew this subscription."))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/dashboard/"))
+        return redirect(payment_url)
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         status = request.GET.get("status")
-        msg = request.GET.get("msg")
 
         if status == "success":
             messages.success(request, "Subscription purchased successfully.")
+
+        extra_context = extra_context or {}
+        user_subscription = UserSubscription.objects.get(pk=object_id)
+        extra_context['is_active'] = user_subscription.end_date >= timezone.now()
+        extra_context['sub_id'] = user_subscription.subscription.id
 
         return super().change_view(request, object_id, form_url, extra_context)
 
@@ -130,44 +143,8 @@ class UserSubscriptionAdmin(ModelAdmin):
 class PaymentTransactionAdmin(ModelAdmin):
     readonly_fields = ('created_at', )
 
-
-# Celery models
-admin.site.unregister(PeriodicTask)
-admin.site.unregister(IntervalSchedule)
-admin.site.unregister(CrontabSchedule)
-admin.site.unregister(SolarSchedule)
-admin.site.unregister(ClockedSchedule)
-admin.site.unregister(TaskResult)
-
-class UnfoldTaskSelectWidget(UnfoldAdminSelectWidget, TaskSelectWidget):
-    pass
-
-class UnfoldPeriodicTaskForm(PeriodicTaskForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["task"].widget = UnfoldAdminTextInputWidget()
-        self.fields["regtask"].widget = UnfoldTaskSelectWidget()
-
-@admin.register(PeriodicTask)
-class PeriodicTaskAdmin(BasePeriodicTaskAdmin, ModelAdmin):
-    form = UnfoldPeriodicTaskForm
-
-@admin.register(IntervalSchedule)
-class IntervalScheduleAdmin(ModelAdmin):
-    pass
-
-@admin.register(CrontabSchedule)
-class CrontabScheduleAdmin(BaseCrontabScheduleAdmin, ModelAdmin):
-    pass
-
-@admin.register(SolarSchedule)
-class SolarScheduleAdmin(ModelAdmin):
-    pass
-
-@admin.register(ClockedSchedule)
-class ClockedScheduleAdmin(BaseClockedScheduleAdmin, ModelAdmin):
-    pass
-
-@admin.register(TaskResult)
-class TaskResultAdmin(ModelAdmin):
-    pass
+    def get_fields(self, request, obj=None):
+        fields = super().get_fields(request, obj)
+        if not request.user.is_superuser:
+            return [field for field in fields if field not in ['user']]
+        return fields
