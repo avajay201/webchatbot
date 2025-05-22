@@ -54,14 +54,14 @@ class ChatbotForm(forms.ModelForm):
                     f"This website URL is unreachable."
                 )
 
-        if Chatbot.objects.exclude(pk=self.instance.pk).filter(name=cleaned_data['name'], status__in=['in_progress', 'success']).exists():
+        if 'name' in data_fields and Chatbot.objects.exclude(pk=self.instance.pk).filter(name=cleaned_data['name'], status__in=['in_progress', 'success']).exists():
             raise forms.ValidationError("Chatbot with this name already exists and is active or in progress.")
 
         if 'website_url' in data_fields:
             if Chatbot.objects.exclude(pk=self.instance.pk).filter(website_url=cleaned_data['website_url'], status__in=['in_progress', 'success']).exists():
                 raise forms.ValidationError("Chatbot with this website URL already exists and is active or in progress.")
 
-        if self.instance.status != 'success':
+        if 'name' in data_fields and self.instance.status != 'success':
             self.instance.status = 'in_progress'
         return cleaned_data
 

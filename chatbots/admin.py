@@ -6,7 +6,7 @@ from .forms import ChatbotForm, ChatbotCustomizationForm
 
 @admin.register(Chatbot)
 class ChatbotAdmin(ModelAdmin):
-    readonly_fields = ('api_key', 'sdk', 'created_at', 'updated_at')
+    readonly_fields = ('api_key', 'sdk', 'last_used', 'created_at', 'updated_at')
     form = ChatbotForm
 
     def get_form(self, request, obj=None, **kwargs):

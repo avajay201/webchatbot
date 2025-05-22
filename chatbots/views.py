@@ -5,6 +5,7 @@ from rest_framework import status
 from .models import Chatbot, ChatbotCustomization
 from .serializers import ChatbotCustomizationSerializer
 from .utils import bot_answer
+from django.utils import timezone
 
 
 class ChatbotCustomizationDetailView(generics.RetrieveUpdateAPIView):
@@ -46,6 +47,8 @@ class ChatBotAnswerAPIView(APIView):
 
         try:
             bot = Chatbot.objects.get(api_key=api_key)
+            if not bot.is_active:
+                return Response({'error': 'Inactive'}, status=status.HTTP_400_BAD_REQUEST)
         except Chatbot.DoesNotExist:
             return Response({'error': 'Invalid API key'}, status=status.HTTP_403_FORBIDDEN)
 
@@ -53,4 +56,8 @@ class ChatBotAnswerAPIView(APIView):
         reply = ''
         for r in reply_list:
             reply += r['result']
+
+        bot.last_used = timezone.now()
+        bot.messages += 1
+        bot.save()
         return Response({'reply': reply}, status=status.HTTP_200_OK)

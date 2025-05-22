@@ -32,6 +32,7 @@ class GoogleLoginAPIView(APIView):
             if created:
                 user.username = idinfo.get('name', 'default_username')
                 user.set_unusable_password()
+                user.is_staff = True
                 user.save()
 
             refresh = RefreshToken.for_user(user)
@@ -115,6 +116,7 @@ class RegisterAPIView(APIView):
         username = email.split('@')[0]
         user = User.objects.create(first_name=fname, last_name=lname, username=username, email=email)
         user.set_password(password)
+        user.is_staff = True
         user.save()
 
         refresh = RefreshToken.for_user(user)
