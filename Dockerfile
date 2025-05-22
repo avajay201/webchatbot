@@ -29,4 +29,5 @@ RUN python manage.py collectstatic --noinput || true
 EXPOSE 8000
 
 # Run the Django app with Gunicorn
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "webChatBot.wsgi:application", "--bind", "0.0.0.0:8000"]
+
