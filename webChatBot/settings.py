@@ -16,6 +16,10 @@ from django.templatetags.static import static
 import os
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
+import dotenv
+
+
+dotenv.load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +34,7 @@ SECRET_KEY = 'django-insecure-dsplaksi$mptg$%6ufuh44i+lj=-d^7vm1g^^2md^##9qy#!v+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -47,7 +51,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'colorfield',
-    'django_celery_results',
     'accounts',
     'subscriptions',
     'chatbots',
@@ -69,7 +72,6 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
     "http://localhost:5500"
 ]
 
@@ -136,7 +138,6 @@ SIMPLE_JWT = {
 }
 
 TRUSTED_ORIGINS = [
-    "http://localhost:3000",
     "http://localhost:8000",
     "http://localhost:5500"
 ]
@@ -156,7 +157,6 @@ UNFOLD = {
     "SITE_TITLE": "Web ChatBot",
     "SITE_HEADER": "Web ChatBot",
     "SITE_URL": "/dashboard/",
-    # "SITE_SUBHEADER": "Appears under SITE_HEADER",
     "SITE_ICON": lambda request: static("logo.png"),
     "SHOW_VIEW_ON_SITE": False,
     "COLORS": {
@@ -317,8 +317,8 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Razorpay configs
-RAZORPAY_KEY_ID = 'rzp_test_CdMtTWPBOCMLTH'
-RAZORPAY_SECRET_ID = 'mLltOTxfAcB7AdJhYYAzYqSt'
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')
+RAZORPAY_SECRET_ID = os.environ.get('RAZORPAY_SECRET_ID')
 
 BASE_URL = 'http://localhost:8000'
 
@@ -336,6 +336,6 @@ os.makedirs(CHROMA_STORE_DIR, exist_ok=True)
 os.makedirs(TEMP_DIR, exist_ok=True)
 
 # API keys and models
-GEMINI_API_KEY = 'AIzaSyCxQOEEj1YWE7SaP1tMG3Ug_jwqYPIJpZI'
-GEMINI_MODEL_NAME = 'gemini-2.0-flash'
-EMBEDINGS_MODEL_NAME = 'all-MiniLM-L6-v2'
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+GEMINI_MODEL_NAME = os.environ.get('GEMINI_MODEL_NAME')
+EMBEDINGS_MODEL_NAME = os.environ.get('EMBEDINGS_MODEL_NAME')

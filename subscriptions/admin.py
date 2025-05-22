@@ -139,6 +139,12 @@ class UserSubscriptionAdmin(ModelAdmin):
 
         return super().change_view(request, object_id, form_url, extra_context)
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
+
 @admin.register(PaymentTransaction)
 class PaymentTransactionAdmin(ModelAdmin):
     readonly_fields = ('created_at', )
@@ -148,3 +154,9 @@ class PaymentTransactionAdmin(ModelAdmin):
         if not request.user.is_superuser:
             return [field for field in fields if field not in ['user']]
         return fields
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)

@@ -6,7 +6,7 @@ from .forms import ChatbotForm, ChatbotCustomizationForm
 
 @admin.register(Chatbot)
 class ChatbotAdmin(ModelAdmin):
-    readonly_fields = ('api_key', 'sdk', 'last_used', 'created_at', 'updated_at')
+    readonly_fields = ('messages', 'api_key', 'sdk', 'last_used', 'created_at', 'updated_at')
     form = ChatbotForm
 
     def get_form(self, request, obj=None, **kwargs):
@@ -34,7 +34,7 @@ class ChatbotAdmin(ModelAdmin):
         if not request.user.is_superuser:
             if obj:
                 if obj.status in ('in_progress', 'failed'):
-                    updated_readonly_fields = ('is_active',) + updated_readonly_fields
+                    updated_readonly_fields = ('name', 'is_active') + updated_readonly_fields
                 updated_readonly_fields = ('website_url', 'subscription', 'status') + updated_readonly_fields
             else:
                 updated_readonly_fields = ('is_active', 'status') + updated_readonly_fields
@@ -55,3 +55,9 @@ class ChatbotCustomizationAdmin(ModelAdmin):
         if obj:
             return ('chatbot',) + self.readonly_fields
         return self.readonly_fields
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(chatbot__user=request.user)

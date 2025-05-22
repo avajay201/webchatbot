@@ -247,6 +247,9 @@
                         </div>
                     {% endfor %}
                 </div>
+                {% if not chatbots %}
+                    <div class="text-center">No chatbots</div>
+                {% endif %}
             {% elif current_tab == 'subscriptions' %}
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {% for subscription in subscriptions %}
@@ -295,6 +298,9 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% if not subscriptions %}
+                    <div class="text-center">No subscriptions</div>
+                {% endif %}
             {% endif %}
         </div>
     </div>
