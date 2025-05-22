@@ -11,10 +11,10 @@ import re
 import secrets
 import string
 from langchain.chains import RetrievalQA
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import PromptTemplate
-from langchain.document_loaders import TextLoader
+from langchain_community.document_loaders import TextLoader
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEmbeddings
 import os
@@ -27,7 +27,7 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 llm = ChatGoogleGenerativeAI(
     model=settings.GEMINI_MODEL_NAME,
     google_api_key=settings.GEMINI_API_KEY,
-    streaming=True)
+    model_kwargs={"streaming": True})
 embedding = HuggingFaceEmbeddings(model_name=settings.EMBEDINGS_MODEL_NAME)
 
 # Prompt initialize

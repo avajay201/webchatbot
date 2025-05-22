@@ -317,8 +317,8 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Razorpay configs
-RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')
-RAZORPAY_SECRET_ID = os.environ.get('RAZORPAY_SECRET_ID')
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
+RAZORPAY_SECRET_ID = os.environ.get('RAZORPAY_SECRET_ID', '')
 
 BASE_URL = 'http://localhost:8000'
 
@@ -336,6 +336,6 @@ os.makedirs(CHROMA_STORE_DIR, exist_ok=True)
 os.makedirs(TEMP_DIR, exist_ok=True)
 
 # API keys and models
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
-GEMINI_MODEL_NAME = os.environ.get('GEMINI_MODEL_NAME')
-EMBEDINGS_MODEL_NAME = os.environ.get('EMBEDINGS_MODEL_NAME')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL_NAME = os.environ.get('GEMINI_MODEL_NAME', '')
+EMBEDINGS_MODEL_NAME = os.environ.get('EMBEDINGS_MODEL_NAME', '')
