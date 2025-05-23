@@ -13,6 +13,7 @@ services:
     restart: unless-stopped
     volumes:
       - .:/www/webchatbot
+      - static_volume:/www/webchatbot/staticfiles
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
@@ -34,4 +35,7 @@ services:
       - .env
     restart: unless-stopped
     volumes:
-      - .:/www/webchatbot
+      - .:/www/webchatbot 
+
+volumes:
+  static_volume:
