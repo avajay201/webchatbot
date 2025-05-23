@@ -4,6 +4,14 @@ services:
   web:
     build: .
     container_name: webchatbot-web
+    volumes:
+      - .:/www/webchatbot
+      - static_volume:/www/webchatbot/staticfiles
+      - media_volume:/www/webchatbot/media
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     env_file:
@@ -11,13 +19,6 @@ services:
     depends_on:
       - redis
     restart: unless-stopped
-    volumes:
-      - .:/www/webchatbot
-      - static_volume:/www/webchatbot/staticfiles
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py collectstatic --noinput &&
-             python manage.py runserver 0.0.0.0:8000"
 
   redis:
     image: redis:7
@@ -28,14 +29,27 @@ services:
     build: .
     container_name: webchatbot-celery
     command: celery -A webchatbot worker --loglevel=info
-    depends_on:
-      - redis
-      - web
+    volumes:
+      - .:/www/webchatbot
     env_file:
       - .env
+    depends_on:
+      - redis
     restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: webchatbot-nginx
+    ports:
+      - "80:80"
     volumes:
-      - .:/www/webchatbot 
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_volume:/www/webchatbot/staticfiles:ro
+      - media_volume:/www/webchatbot/media:ro
+    depends_on:
+      - web
+    restart: unless-stopped
 
 volumes:
   static_volume:
+  media_volume:
