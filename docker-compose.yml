@@ -28,7 +28,7 @@ services:
   celery:
     build: .
     container_name: webchatbot-celery
-    command: celery -A webchatbot worker --loglevel=info
+    command: celery -A webChatBot worker --loglevel=info
     volumes:
       - .:/www/webchatbot
     env_file:
