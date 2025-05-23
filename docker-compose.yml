@@ -42,10 +42,15 @@ services:
     container_name: webchatbot-nginx
     ports:
       - "80:80"
+      - "443:443"       # expose HTTPS port as well
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - static_volume:/www/webchatbot/staticfiles:ro
       - media_volume:/www/webchatbot/media:ro
+      - /etc/letsencrypt/live/botsdk.rayonweb.com:/etc/letsencrypt/live/botsdk.rayonweb.com:ro
+      - /etc/letsencrypt/archive/botsdk.rayonweb.com:/etc/letsencrypt/archive/botsdk.rayonweb.com:ro
+      - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal:ro
+      - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
     depends_on:
       - web
     restart: unless-stopped
