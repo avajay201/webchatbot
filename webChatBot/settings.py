@@ -321,7 +321,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
 RAZORPAY_SECRET_ID = os.environ.get('RAZORPAY_SECRET_ID', '')
 
-BASE_URL = 'http://localhost:8000'
+BASE_URL = 'https://botsdk.rayonweb.com'
 
 # Celery setup
 CELERY_BROKER_URL = 'redis://redis:6379/0'
