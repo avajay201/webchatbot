@@ -1,4 +1,4 @@
-# Use official Python image
+# Use official slim Python image
 FROM python:3.11-slim
 
 # Set environment variables
@@ -8,22 +8,28 @@ ENV PYTHONUNBUFFERED 1
 # Set working directory
 WORKDIR /www/webchatbot
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install system dependencies (minimize rebuilds)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Install pip early and cache wheels
 COPY req.txt .
-RUN pip install --upgrade pip && pip install -r req.txt
 
-# Copy project files
+RUN pip install -i https://pypi.org/simple --upgrade pip \
+ && pip install --no-cache-dir -r req.txt
+
+
+# Copy project files (after installing dependencies for better cache hit)
 COPY . .
 
-# Expose Django default port
+# Collect static if needed here (optional)
+# RUN python manage.py collectstatic --noinput
+
+# Expose port
 EXPOSE 8000
 
-# Default command (overridden in docker-compose)
+# Entrypoint (can be overridden by docker-compose)
 CMD ["gunicorn", "webchatbot.wsgi:application", "--bind", "0.0.0.0:8000"]
