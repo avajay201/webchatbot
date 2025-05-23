@@ -140,7 +140,12 @@ SIMPLE_JWT = {
 
 TRUSTED_ORIGINS = [
     "http://localhost:8000",
-    "http://localhost:5500"
+    "http://localhost:5500",
+    "https://botsdk.rayonweb.com"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://botsdk.rayonweb.com"
 ]
 
 # Internationalization
@@ -319,7 +324,7 @@ RAZORPAY_SECRET_ID = os.environ.get('RAZORPAY_SECRET_ID', '')
 BASE_URL = 'http://localhost:8000'
 
 # Celery setup
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ENABLE_UTC = True
