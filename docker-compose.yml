@@ -9,9 +9,7 @@ services:
       - static_volume:/www/webchatbot/staticfiles
       - media_volume:/www/webchatbot/media
     command: >
-      sh -c "python manage.py migrate &&
-             python manage.py collectstatic --noinput &&
-             python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     env_file:
