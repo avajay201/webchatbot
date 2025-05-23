@@ -17,7 +17,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.document_loaders import TextLoader
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEmbeddings
-import os
+import time
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
@@ -213,13 +213,18 @@ def create_chatbot(bot_name, url):
         
         # Process all collected internal links
         if internal_links:
-            for link in internal_links:
-                print(f"\n[Processing] {link}")
+            for idx, link in enumerate(internal_links, start=1):
+                print(f"\n[Processing {idx}/{len(internal_links)}] {link}")
                 status = scrape_url(link)
                 if status:
                     print(f"[Done] Processed: {link}")
+                else:
+                    print(f"[Warning] Failed to process: {link}")
+                
+                time.sleep(1)  # Add delay to avoid overload and rate limits
 
         # Collect all text files data
+        print("Collecting text data from temp files...")
         files = os.listdir(settings.TEMP_DIR)
         content = ""
         for file in files:
@@ -228,11 +233,14 @@ def create_chatbot(bot_name, url):
                 content += f.read() + '\n'
             os.remove(filepath)
 
+        print("Storing vector data...")
         # Store vector data
         store_vectors(content, bot_name)
+        print("Vector data stored successfully.")
         return True
     except Exception as err:
         print('Bot creating error:', err)
+        return False
 
 def generate_api_key(prefix="cbt_sk_prod", length=24):
     alphabet = string.ascii_letters + string.digits
