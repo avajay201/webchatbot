@@ -7,6 +7,7 @@ from rest_framework.decorators import APIView
 from rest_framework import status
 from django.contrib.auth import authenticate
 from .models import User
+from django.contrib.auth.models import Group
 
 
 class GoogleLoginAPIView(APIView):
@@ -118,6 +119,10 @@ class RegisterAPIView(APIView):
         user.set_password(password)
         user.is_staff = True
         user.save()
+
+        group_name = "User Access"
+        group, _ = Group.objects.get_or_create(name=group_name)
+        user.groups.add(group)
 
         refresh = RefreshToken.for_user(user)
 

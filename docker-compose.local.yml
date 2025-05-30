@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    container_name: webchatbot-web-dev
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - .:/www/webchatbot
+    restart: unless-stopped
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+
+  redis:
+    image: redis:7
+    container_name: webchatbot-redis-dev
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: webchatbot-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: chatbotdb
+      POSTGRES_USER: chatbotuser
+      POSTGRES_PASSWORD: chatbotpass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  celery:
+    build: .
+    container_name: webchatbot-celery-dev
+    command: celery -A webChatBot worker --loglevel=info
+    depends_on:
+      - redis
+      - web
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - .:/www/webchatbot
+
+volumes:
+  postgres_data:

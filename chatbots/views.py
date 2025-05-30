@@ -6,6 +6,7 @@ from .models import Chatbot, ChatbotCustomization
 from .serializers import ChatbotCustomizationSerializer
 from .utils import bot_answer
 from django.utils import timezone
+from urllib.parse import urlparse
 
 
 class ChatbotCustomizationDetailView(generics.RetrieveUpdateAPIView):
@@ -22,6 +23,7 @@ class ChatbotCustomizationDetailView(generics.RetrieveUpdateAPIView):
 class ValidateChatBotAPIView(APIView):
     def post(self, request):
         api_key = request.data.get('api_key')
+        origin_header = request.META.get('HTTP_ORIGIN') or request.META.get('HTTP_REFERER')
 
         if not api_key:
             return Response({'error': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
@@ -32,6 +34,14 @@ class ValidateChatBotAPIView(APIView):
         except Chatbot.DoesNotExist:
             return Response({'error': 'Invalid API key'}, status=status.HTTP_403_FORBIDDEN)
 
+        if origin_header:
+            parsed_origin = urlparse(origin_header)
+            origin = f"{parsed_origin.scheme}://{parsed_origin.netloc}"
+            if origin != bot.website_url:
+                return Response({'error': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
+
         ui = ChatbotCustomization.objects.filter(chatbot=bot).first()
         if ui:
             ui = ChatbotCustomizationSerializer(ui).data
@@ -41,12 +51,21 @@ class ChatBotAnswerAPIView(APIView):
     def post(self, request):
         api_key = request.data.get('api_key')
         query = request.data.get('query', '').strip()
+        origin_header = request.META.get('HTTP_ORIGIN') or request.META.get('HTTP_REFERER')
 
         if not api_key or not query:
             return Response({'error': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             bot = Chatbot.objects.get(api_key=api_key)
+            if origin_header:
+                parsed_origin = urlparse(origin_header)
+                origin = f"{parsed_origin.scheme}://{parsed_origin.netloc}"
+                if origin != bot.website_url:
+                    return Response({'error': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
+
             if not bot.is_active:
                 return Response({'error': 'Inactive'}, status=status.HTTP_400_BAD_REQUEST)
         except Chatbot.DoesNotExist:
